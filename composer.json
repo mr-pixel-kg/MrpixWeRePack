@@ -1,0 +1,37 @@
+{
+    "name": "mrpix/we-repack",
+    "description": "mpXweRepack",
+    "type": "shopware-platform-plugin",
+    "license": "MIT",
+    "version": "1.0.0",
+    "authors": [
+        {
+            "name": "mr. pixel KG"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Mrpix\\WeRepack\\": "src/"
+        }
+    },
+    "extra": {
+        "shopware-plugin-class": "Mrpix\\WeRepack\\MrpixWeRepack",
+        "label": {
+            "de-DE": "mpXweRepack - We Repack Integration",
+            "en-GB": "mpXweRepack - We Repack Integration"
+        },
+        "copyright": "(c) by mr. pixel KG",
+        "manufacturerLink": {
+            "de-DE": "https://mr-pixel.de/",
+            "en-GB": "https://mr-pixel.de/"
+        },
+        "supportLink": {
+            "de-DE": "https://mr-pixel.de",
+            "en-GB": "https://mr-pixel.de"
+        }
+    },
+    "require": {
+        "php": "^7.4 || ^8.0",
+        "shopware/core": "6.4.*"
+    }
+}

@@ -1,0 +1,22 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <!-- Entities -->
+        <service id="Mrpix\WeRepack\Core\Content\RepackOrder\RepackOrderDefinition">
+            <tag name="shopware.entity.definition" entity="mp_repack_order" />
+        </service>
+
+        <!-- Entity Extensions -->
+        <service id="Mrpix\WeRepack\Extension\Content\Order\OrderExtension">
+            <tag name="shopware.entity.exension"/>
+        </service>
+
+        <service id="Mrpix\WeRepack\Extension\Content\PromotionIndividualCode\PromotionIndividualCodeExtension">
+            <tag name="shopware.entity.extension"/>
+        </service>
+    </services>
+</container>
