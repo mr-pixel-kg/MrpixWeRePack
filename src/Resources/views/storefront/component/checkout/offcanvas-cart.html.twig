@@ -1,0 +1,11 @@
+{% sw_extends '@Storefront/storefront/component/checkout/offcanvas-cart.html.twig' %}
+
+{% block component_offcanvas_cart_actions_promotion %}
+    {{ parent() }}
+    {% if isCartNotEmpty %}
+        <div class="js-offcanvas-cart-we-repack">
+            {{ dump(page.cart) }}
+            {% sw_include '@Storefront/storefront/component/mrpix-we-repack/we-repack-form.html.twig' %}
+        </div>
+    {% endif %}
+{% endblock %}

@@ -12,6 +12,24 @@
             <label lang="de-DE">Kunden erhalten einen Gutschein, für die Auswahl der Repack-Liefer Option</label>
         </input-field>
 
+        <input-field type="single-select">
+            <name>couponSendingType</name>
+            <label>Discount type</label>
+            <label lang="de-DE">Rabatttyp</label>
+            <options>
+                <option>
+                    <id>cart</id>
+                    <name>Discount for current cart</name>
+                    <name lang="de-DE">Rabatt für den aktuellen Warenkorb</name>
+                </option>
+                <option>
+                    <id>order</id>
+                    <name>Receive coupon code after order</name>
+                    <name lang="de-DE">Versand eines Codes nach der Bestellung</name>
+                </option>
+            </options>
+        </input-field>
+
         <component name="sw-entity-single-select">
             <name>repackPromotion</name>
             <entity>promotion</entity>

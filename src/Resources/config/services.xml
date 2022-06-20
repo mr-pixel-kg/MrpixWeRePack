@@ -18,5 +18,14 @@
         <service id="Mrpix\WeRepack\Extension\Content\PromotionIndividualCode\PromotionIndividualCodeExtension">
             <tag name="shopware.entity.extension"/>
         </service>
+
+        <!-- Controller -->
+        <service id="Mrpix\WeRepack\Storefront\Controller\WeRepackController" public="true">
+            <argument type="service" id="Shopware\Core\Checkout\Cart\LineItemFactoryRegistry"/>
+            <argument type="service" id="Shopware\Core\Checkout\Cart\SalesChannel\CartService"/>
+            <call method="setContainer">
+                <argument type="service" id="service_container" />
+            </call>
+        </service>
     </services>
 </container>

@@ -44,7 +44,7 @@ class Installer extends Setup
 
         $mailTemplate = [
             'id' => Uuid::randomHex(),
-            'mailTemplateId' => $mailTemplateTypeId,
+            'mailTemplateTypeId' => $mailTemplateTypeId,
             'subject' => [
                 'de-DE' => 'Ihr persönlicher Gutschein für Ihre Bestellung',
                 'en-GB' => 'Your personal coupon for your order',

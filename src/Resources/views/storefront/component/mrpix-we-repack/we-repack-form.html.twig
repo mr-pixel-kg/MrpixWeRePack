@@ -1,0 +1,21 @@
+{% block mrpix_we_repack_form %}
+    <form action="{{ path('frontend.checkout.mrpix_we_repack.add') }}"
+          class="offcanvas-cart-we-repack-form js-offcanvas-cart-add-we-repack"
+          method="post">
+        {{ sw_csrf('frontend.checkout.mrpix_we_repack.add') }}
+
+        {% block mrpix_we_repack_form_checkbox %}
+            <input type="checkbox" name="weRepackShipping" id="weRepackShipping" />
+        {% endblock %}
+
+        {% block mrpix_we_repack_form_checkbox_label %}
+            <label for="weRepackShipping">{{ 'mrpixWeRepack.form.labelCheckbox'|trans|sw_sanitize }}</label>
+        {% endblock %}
+
+        {% block mrpix_we_repack_form_coupon_info %}
+            {% if config('MrpixWeRepack.config.createPromotionCodes') %}
+                <span>{{ 'mrpixWeRepack.form.couponInformation'|trans|sw_sanitize }}</span>
+            {% endif %}
+        {% endblock %}
+    </form>
+{% endblock %}
