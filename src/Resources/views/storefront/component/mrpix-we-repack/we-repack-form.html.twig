@@ -1,11 +1,28 @@
 {% block mrpix_we_repack_form %}
-    <form action="{{ path('frontend.checkout.mrpix_we_repack.add') }}"
-          class="offcanvas-cart-we-repack-form js-offcanvas-cart-add-we-repack"
+    {% set cart = page.cart %}
+    {% set hasRepackPromotion = false %}
+    {% set promotionId = null %}
+    {% if config('MrpixWeRepack.config.createPromotionCodes') and config('MrpixWeRepack.config.couponSendingType') == 'cart' and config('MrpixWeRepack.config.repackPromotion') and page.extensions.repackPromotion %}
+        {% for lineItem in cart.lineItems %}
+            {% if lineItem.type == 'promotion' and lineItem.payload.code == page.extensions.repackPromotion.code %}
+                {% set hasRepackPromotion = true %}
+                {% set promotionId = lineItem.id %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
+    <form action="{% if not hasRepackPromotion %}{{ path('frontend.checkout.promotion.add') }}{% else %}{{ path('frontend.checkout.line-item.delete', {'id': promotionId }) }}{% endif %}"
+          class="cart-we-repack-form js-offcanvas-cart-add-we-repack"
           method="post">
-        {{ sw_csrf('frontend.checkout.mrpix_we_repack.add') }}
+        {% if not hasRepackPromotion %}
+            {{ sw_csrf('frontend.checkout.promotion.add') }}
+        {% else %}
+            {{ sw_csrf('frontend.checkout.line-item.delete') }}
+        {% endif %}
 
         {% block mrpix_we_repack_form_checkbox %}
-            <input type="checkbox" name="weRepackShipping" id="weRepackShipping" />
+            <input type="checkbox" name="weRepackShipping"
+                   id="weRepackShipping"{% if hasRepackPromotion %} checked{% endif %} />
         {% endblock %}
 
         {% block mrpix_we_repack_form_checkbox_label %}
@@ -14,7 +31,47 @@
 
         {% block mrpix_we_repack_form_coupon_info %}
             {% if config('MrpixWeRepack.config.createPromotionCodes') %}
-                <span>{{ 'mrpixWeRepack.form.couponInformation'|trans|sw_sanitize }}</span>
+                {% if config('MrpixWeRepack.config.couponSendingType') == 'cart' %}
+                    <span>{{ 'mrpixWeRepack.form.couponInformationCart'|trans|sw_sanitize }}</span>
+                {% else %}
+                    <span>{{ 'mrpixWeRepack.form.couponInformationAfterOrder'|trans|sw_sanitize }}</span>
+                {% endif %}
+            {% endif %}
+        {% endblock %}
+
+        {% block mrpix_we_repack_form_redirect_input %}
+            <input type="hidden"
+                   name="redirectTo"
+                   value="frontend.checkout.cart.page">
+        {% endblock %}
+
+        {% block mrpix_we_repack_form_promotion_info %}
+            {% if page.extensions.repackPromotion and not hasRepackPromotion %}
+                {% set promotion = page.extensions.repackPromotion %}
+                <input type="hidden"
+                       name="lineItems[{{ promotion.id }}][id]"
+                       value="{{ promotion.id }}">
+                <input type="hidden"
+                       name="lineItems[{{ promotion.id }}][type]"
+                       value="promotion">
+                <input type="hidden"
+                       name="lineItems[{{ promotion.id }}][referencedId]"
+                       value="{{ promotion.id }}">
+                <input type="hidden"
+                       name="lineItems[{{ promotion.id }}][stackable]"
+                       value="1">
+                <input type="hidden"
+                       name="lineItems[{{ promotion.id }}][removable]"
+                       value="1">
+                <input type="hidden"
+                       name="lineItems[{{ promotion.id }}][quantity]"
+                       value="1"/>
+                <input type="hidden"
+                       name="lineItems[{{ promotion.id }}][name]"
+                       value="{{ promotion.translated.name }}">
+                <input type="hidden"
+                       name="code"
+                       value="{{ promotion.code }}"/>
             {% endif %}
         {% endblock %}
     </form>

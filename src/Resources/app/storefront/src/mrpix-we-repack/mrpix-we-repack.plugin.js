@@ -21,12 +21,13 @@ export default class MrpixWeRepackPlugin extends Plugin {
     }
 
     _onCheckboxChange(event) {
-        const formData = FormSerializeUtil.serialize(this.el);
+        this.el.submit();
+        /*const formData = FormSerializeUtil.serialize(this.el);
         const data = {
             'isSelected': event.target.checked
         };
 
-        this._client.post(this.el.action, formData, this._handleResult.bind(this), 'application/json');
+        this._client.post(this.el.action, formData, this._handleResult.bind(this), 'application/json');*/
     }
 
     _handleResult(data) {

@@ -1,0 +1,8 @@
+{% sw_extends '@Storefront/storefront/page/checkout/cart/index.html.twig' %}
+
+{% block page_checkout_cart_product_table %}
+    {{ parent() }}
+    {% if page.cart.lineItems.count > 0 %}
+        {% sw_include '@MrpixWeRepack/storefront/component/mrpix-we-repack/we-repack-form.html.twig' %}
+    {% endif %}
+{% endblock %}
