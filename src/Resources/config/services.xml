@@ -40,5 +40,9 @@
             <argument type="service" id="Mrpix\WeRepack\Components\PromotionLoader"/>
             <tag name="kernel.event_subscriber"/>
         </service>
+
+        <service id="Mrpix\WeRepack\Subscriber\CheckoutConfirmSubscriber">
+            <tag name="kernel.event_subscriber"/>
+        </service>
     </services>
 </container>
