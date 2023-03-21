@@ -4,16 +4,16 @@ namespace Mrpix\WeRepack\Components;
 
 use Shopware\Core\Checkout\Promotion\PromotionEntity;
 use Shopware\Core\Framework\Context;
-use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\System\SystemConfig\SystemConfigService;
 
 class PromotionLoader
 {
-    protected EntityRepositoryInterface $promotionRepository;
+    protected EntityRepository $promotionRepository;
     protected SystemConfigService $configService;
 
-    public function __construct(EntityRepositoryInterface $promotionRepository, SystemConfigService $configService)
+    public function __construct(EntityRepository $promotionRepository, SystemConfigService $configService)
     {
         $this->promotionRepository = $promotionRepository;
         $this->configService = $configService;

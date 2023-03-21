@@ -3,10 +3,10 @@
 namespace Mrpix\WeRepack\Setup;
 
 use Shopware\Core\Defaults;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Doctrine\DBAL\Connection;
 use Shopware\Core\Framework\Context;
-use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 
 abstract class Setup
@@ -20,14 +20,14 @@ abstract class Setup
     ];
 
     protected Context $context;
-    protected EntityRepositoryInterface $mailTemplateTypeRepository;
-    protected EntityRepositoryInterface $mailTemplateRepository;
+    protected EntityRepository $mailTemplateTypeRepository;
+    protected EntityRepository $mailTemplateRepository;
     protected Connection $connection;
 
     public function __construct(
         Context $context,
-        EntityRepositoryInterface $mailTemplateTypeRepository,
-        EntityRepositoryInterface $mailTemplateRepository,
+        EntityRepository $mailTemplateTypeRepository,
+        EntityRepository $mailTemplateRepository,
         Connection $connection
     )
     {
