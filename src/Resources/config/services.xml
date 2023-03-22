@@ -44,5 +44,11 @@
         <service id="Mrpix\WeRepack\Subscriber\CheckoutConfirmSubscriber">
             <tag name="kernel.event_subscriber"/>
         </service>
+
+        <!-- Commands -->
+        <service id="Mrpix\WeRepack\Command\TestCommand">
+            <argument type="service" id="order.repository"/>
+            <tag name="console.command" />
+        </service>
     </services>
 </container>
