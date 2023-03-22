@@ -39,10 +39,10 @@
                                    class="checkout-confirm-we-repack-checkbox {{ formCheckInputClass }}"
                                    id="mrpixWeRepack"
                                    {% if page.extensions['MrpixWeRepack'].weRepackEnabled is true %}checked="checked"{% endif %}
-                                   name="mrpixWeRepack"/> <!--confirmOrderForm-->
+                                   name="mrpixWeRepack"/>
 
                             <!-- Required, because unchecking the checkbox will otherwise not be detected -->
-                            <input type="hidden" id="mrpixWeRepackPlugin" name="postId" value="34657" />
+                            <input type="hidden" id="mrpixWeRepackPlugin" name="mrpixWeRepackToggle" value="1" />
                         {% endblock %}
 
                         {% block mrpix_we_repack_form_checkbox_label %}

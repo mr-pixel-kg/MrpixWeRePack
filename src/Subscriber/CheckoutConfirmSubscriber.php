@@ -43,17 +43,18 @@ class CheckoutConfirmSubscriber implements EventSubscriberInterface
     public function onSalesChannelContextSwitch(SalesChannelContextSwitchEvent $event)
     {
         $salesChannelId = $event->getSalesChannelContext()->getSalesChannel()->getId();
-        dump($event);
 
-        // TODO Nur welchseln, wenn auch durch Checkbox ausgelöst
-        $this->session->setWeRepackEnabled(!$this->session->isWeRepackEnabled());
+        // Toggle WeRepack checkbox only if event is triggered by checkbox
+        if($event->getRequestDataBag()->get('mrpixWeRepackToggle') == 1) {
+            $this->session->setWeRepackEnabled(!$this->session->isWeRepackEnabled());
 
-
-
-        if ($event->getRequestDataBag()->has('mrpixWeRepack')) {
-            $weRepackEnabled= $event->getRequestDataBag()->get('mrpixWeRepack');
-            $this->session->setWeRepackEnabled($weRepackEnabled);
+            /*
+             * Alternatively can be checked if the WeRepack option is enabled:
+             * $weRepackEnabled= $event->getRequestDataBag()->get('mrpixWeRepack');
+             *
+             * because the form field 'mrpixWeRepack' is only sent when the checkbox is enabled
+             */
         }
-        dump($this->session->isWeRepackEnabled());
+
     }
 }
