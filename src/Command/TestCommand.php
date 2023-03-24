@@ -2,6 +2,7 @@
 
 namespace Mrpix\WeRepack\Command;
 
+use Mrpix\WeRepack\Service\WeRepackTelemetryService;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Symfony\Component\Console\Command\Command;
@@ -15,12 +16,14 @@ class TestCommand extends Command
 
     private EntityRepository $werepackOrderRepository;
     private EntityRepository $orderRepository;
+    private WeRepackTelemetryService $telemetryService;
 
-    public function __construct(EntityRepository $werepackOrderRepository, EntityRepository $orderRepository)
+    public function __construct(EntityRepository $werepackOrderRepository, EntityRepository $orderRepository, WeRepackTelemetryService $telemetryService)
     {
         parent::__construct(null);
         $this->werepackOrderRepository = $werepackOrderRepository;
         $this->orderRepository = $orderRepository;
+        $this->telemetryService = $telemetryService;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -31,11 +34,13 @@ class TestCommand extends Command
 
         //$this->orderRepository->search(new Criteria(), Context::createDefaultContext())->last()->getId()
 
-        dump($this->werepackOrderRepository->upsert([[
+        /*dump($this->werepackOrderRepository->upsert([[
             'orderId' => 'c44975df6f71437783b99d0bd32c347d',
             'promotionIndividualCodeId' => null,
             'isRepack' => true,
-        ]], Context::createDefaultContext()));
+        ]], Context::createDefaultContext()));*/
+
+        $this->telemetryService->sendTelemetryData();
 
         return Command::SUCCESS;
     }

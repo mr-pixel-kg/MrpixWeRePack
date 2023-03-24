@@ -50,7 +50,13 @@
         <service id="Mrpix\WeRepack\Command\TestCommand">
             <argument type="service" id="mp_repack_order.repository"/>
             <argument type="service" id="order.repository"/>
+            <argument type="service" id="Mrpix\WeRepack\Service\WeRepackTelemetryService"/>
             <tag name="console.command" />
+        </service>
+
+        <!-- Services -->
+        <service id="Mrpix\WeRepack\Service\WeRepackTelemetryService">
+
         </service>
     </services>
 </container>
