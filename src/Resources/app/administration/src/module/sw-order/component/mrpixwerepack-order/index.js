@@ -35,11 +35,12 @@ Component.register('sw-customer-werepack', {
 
     created() {
         const criteria = (new Criteria())
+            .addAssociation('order')
             .addFilter(Criteria.equals("orderId", this.order.id));
 
         this.repository.search(criteria, Context.api)
             .then(result => {
-                this.weRepackOrder = result.first()
+                this.weRepackOrder = result.first();
             });
     }
 });

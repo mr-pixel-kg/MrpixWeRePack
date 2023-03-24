@@ -13,7 +13,7 @@
                 </dd>
 
                 <dt>{{ $tc('mrpixwerepack.order.voucher') }}</dt>
-                <dd vif-="weRepackOrder.promotionIndividualCode">
+                <dd v-if="weRepackOrder.promotionIndividualCode">
                     <router-link
                             :to="{ name: 'sw.promotion.v2.detail', params: { id: weRepackOrder.promotionIndividualCode.id } }">
                         {{ weRepackOrder.promotionIndividualCode.code }}
@@ -27,3 +27,4 @@
 <div v-else>
     <strong>{{ $tc('mrpixwerepack.order.notAvailable') }}</strong>
 </div>
+{{ dump(weRepackOrder) }}
