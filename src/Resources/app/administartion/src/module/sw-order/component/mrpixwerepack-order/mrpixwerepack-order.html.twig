@@ -1,0 +1,29 @@
+<div v-if="weRepackOrder">
+    <sw-container columns="1fr 1fr">
+        <div>
+            <sw-description-list class="mrpix-werepack-list">
+                <dt>WeRepack</dt>
+                <dd v-if="weRepackOrder.isRepack">
+                    <sw-icon name="regular-shopping-bag" color="#88fc03"></sw-icon>
+                    {{ $tc('mrpixwerepack.order.weRepackSelected') }}
+                </dd>
+                <dd v-else>
+                    <sw-icon name="regular-trash" color="#fc3903"></sw-icon>
+                    {{ $tc('mrpixwerepack.order.weRepackNotSelected') }}
+                </dd>
+
+                <dt>{{ $tc('mrpixwerepack.order.voucher') }}</dt>
+                <dd vif-="weRepackOrder.promotionIndividualCode">
+                    <router-link
+                            :to="{ name: 'sw.promotion.v2.detail', params: { id: weRepackOrder.promotionIndividualCode.id } }">
+                        {{ weRepackOrder.promotionIndividualCode.code }}
+                    </router-link>
+                </dd>
+                <dd v-else>{{ $tc('mrpixwerepack.order.noVoucher') }}</dd>
+            </sw-description-list>
+        </div>
+    </sw-container>
+</div>
+<div v-else>
+    <strong>{{ $tc('mrpixwerepack.order.notAvailable') }}</strong>
+</div>
