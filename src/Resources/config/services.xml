@@ -60,6 +60,10 @@
             <argument type="service" id="logger" />
         </service>
 
+        <service id="Mrpix\WeRepack\Service\ConfigService">
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+        </service>
+
         <!-- Repositories -->
         <service id="Mrpix\WeRepack\Repository\WeRepackOrderRepository">
             <argument type="service" id="mp_repack_order.repository"/>
