@@ -5,6 +5,7 @@ namespace Mrpix\WeRepack\Core\Checkout;
 use Mrpix\WeRepack\Components\PromotionLoader;
 use Mrpix\WeRepack\Components\WeRepackSession;
 use Mrpix\WeRepack\Service\ConfigService;
+use Mrpix\WeRepack\Service\PromotionService;
 use Shopware\Core\Checkout\Cart\Cart;
 use Shopware\Core\Checkout\Cart\CartBehavior;
 use Shopware\Core\Checkout\Cart\CartProcessorInterface;
@@ -28,15 +29,15 @@ class DiscountProcessor implements CartProcessorInterface
     private AbsolutePriceCalculator $absolutePriceCalculator;
     private WeRepackSession $session;
     private ConfigService $configService;
-    private PromotionLoader $promotionLoader;
+    private PromotionService $promotionService;
 
-    public function __construct(PercentagePriceCalculator $percentagePriceCalculator, AbsolutePriceCalculator $absolutePriceCalculator, ConfigService $configService, PromotionLoader $promotionLoader)
+    public function __construct(PercentagePriceCalculator $percentagePriceCalculator, AbsolutePriceCalculator $absolutePriceCalculator, ConfigService $configService, PromotionService $promotionService)
     {
         $this->percentagePriceCalculator = $percentagePriceCalculator;
         $this->absolutePriceCalculator = $absolutePriceCalculator;
         $this->session = new WeRepackSession();
         $this->configService = $configService;
-        $this->promotionLoader = $promotionLoader;
+        $this->promotionService = $promotionService;
     }
 
     public function process(CartDataCollection $data, Cart $original, Cart $toCalculate, SalesChannelContext $context, CartBehavior $behavior): void
@@ -48,7 +49,7 @@ class DiscountProcessor implements CartProcessorInterface
             return;
         }
 
-        $weRepackPromotion = $this->promotionLoader->getPromotion($context->getContext());
+        $weRepackPromotion = $this->promotionService->getPromotion($context->getContext());
         //dump($weRepackPromotion);
 
         $products = $this->findExampleProducts($toCalculate);
