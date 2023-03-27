@@ -56,7 +56,12 @@
 
         <!-- Services -->
         <service id="Mrpix\WeRepack\Service\WeRepackTelemetryService">
+            <argument type="service" id="Mrpix\WeRepack\Repository\WeRepackOrderRepository"/>
+        </service>
 
+        <!-- Repositories -->
+        <service id="Mrpix\WeRepack\Repository\WeRepackOrderRepository">
+            <argument type="service" id="mp_repack_order.repository"/>
         </service>
     </services>
 </container>
