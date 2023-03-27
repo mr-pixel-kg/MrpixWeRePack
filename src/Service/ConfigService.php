@@ -7,7 +7,7 @@ use Shopware\Core\System\SystemConfig\SystemConfigService;
 class ConfigService
 {
     public const SYSTEM_CONFIG_DOMAIN = 'MrpixWeRepack.config.';
-    private $systemConfigService;
+    protected SystemConfigService $systemConfigService;
 
     public function __construct(SystemConfigService $systemConfigService)
     {

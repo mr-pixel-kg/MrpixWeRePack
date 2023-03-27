@@ -12,9 +12,9 @@ class WeRepackTelemetryService
 {
     const ENDPOINT_URL = 'https://werepack.org/api/community/v1/sites';
 
-    private Client $client;
-    private WeRepackOrderRepository $weRepackOrderRepository;
-    private LoggerInterface $logger;
+    protected Client $client;
+    protected WeRepackOrderRepository $weRepackOrderRepository;
+    protected LoggerInterface $logger;
 
     public function __construct(WeRepackOrderRepository $weRepackOrderRepository, LoggerInterface $logger) {
         $this->client = new Client([

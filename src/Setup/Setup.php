@@ -11,9 +11,9 @@ use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 
 abstract class Setup
 {
-    protected const TABLE_NAMES = ['mp_repack_order'];
-    protected const TEMPLATE_TYPE_TECHNICAL_NAME = 'mrpix.we_repack.coupon';
-    protected const TEMPLATE_TYPE_NAME = [
+    protected const DATABASE_TABLE_NAMES = ['mp_repack_order'];
+    protected const MAIL_TEMPLATE_TYPE_TECHNICAL_NAME = 'mrpix.we_repack.coupon';
+    protected const MAIL_TEMPLATE_TYPE_NAME = [
         'de-DE' => 'Gutscheinmail für Repack Bestellungen',
         'en-GB' => 'Coupon mail for repack orders',
         Defaults::LANGUAGE_SYSTEM => 'Coupon mail for repack orders'

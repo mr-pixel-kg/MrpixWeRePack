@@ -38,12 +38,14 @@ class CheckoutConfirmSubscriber implements EventSubscriberInterface
 
     public function onCheckoutOrderPlaced(CheckoutOrderPlacedEvent $event)
     {
+        // Write WeRepack data to database
         $this->werepackOrderRepository->upsert([[
             'orderId' => $event->getOrder()->getId(),
             'promotionIndividualCodeId' => null,
             'isRepack' => $this->session->isWeRepackEnabled(),
         ]], $event->getContext());
 
+        // Clear session
         $this->session->clear();
     }
 

@@ -9,7 +9,7 @@ class Uninstaller extends Setup
 {
     protected function adjustMails(): void
     {
-        $mailTemplateTypeId = $this->getExistingMailTemplateTypeId(self::TEMPLATE_TYPE_TECHNICAL_NAME);
+        $mailTemplateTypeId = $this->getExistingMailTemplateTypeId(self::MAIL_TEMPLATE_TYPE_TECHNICAL_NAME);
         $mailTemplateIds = $this->getMailTemplateIds($mailTemplateTypeId);
         $ids = [];
         foreach ($mailTemplateIds as $mailTemplateId) {
@@ -28,7 +28,7 @@ class Uninstaller extends Setup
      */
     protected function adjustDatabase(): void
     {
-        foreach (self::TABLE_NAMES as $table) {
+        foreach (self::DATABASE_TABLE_NAMES as $table) {
             $this->connection->executeStatement('DROP TABLE ' . $table);
         }
     }
