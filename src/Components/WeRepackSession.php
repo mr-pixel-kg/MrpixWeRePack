@@ -37,7 +37,7 @@ class WeRepackSession
      */
     public function clear(): void
     {
-        $this->session->set(self::SESSION_WEREPACK_ENABLED, null);
+        $this->session->set(self::SESSION_WEREPACK_ENABLED, false);
     }
 
     /**

@@ -43,6 +43,8 @@ class CheckoutConfirmSubscriber implements EventSubscriberInterface
             'promotionIndividualCodeId' => null,
             'isRepack' => $this->session->isWeRepackEnabled(),
         ]], $event->getContext());
+
+        $this->session->clear();
     }
 
     public function onSalesChannelContextSwitch(SalesChannelContextSwitchEvent $event)
