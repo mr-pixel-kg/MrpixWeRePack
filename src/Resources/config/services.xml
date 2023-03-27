@@ -13,7 +13,6 @@
 
         <!-- Processors -->
         <service id="Mrpix\WeRepack\Core\Checkout\DiscountProcessor" autowire="true">
-            <!--<argument type="service" id="Mrpix\WeRepack\Service\ConfigService"/>-->
             <tag name="shopware.cart.processor" priority="4500"/>
         </service>
 
