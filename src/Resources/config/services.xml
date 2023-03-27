@@ -57,6 +57,7 @@
         <!-- Services -->
         <service id="Mrpix\WeRepack\Service\WeRepackTelemetryService">
             <argument type="service" id="Mrpix\WeRepack\Repository\WeRepackOrderRepository"/>
+            <argument type="service" id="logger" />
         </service>
 
         <!-- Repositories -->

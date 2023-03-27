@@ -5,6 +5,7 @@ namespace Mrpix\WeRepack\Service;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Mrpix\WeRepack\Repository\WeRepackOrderRepository;
+use Psr\Log\LoggerInterface;
 use Shopware\Core\Framework\Context;
 
 class WeRepackTelemetryService
@@ -13,12 +14,14 @@ class WeRepackTelemetryService
 
     private Client $client;
     private WeRepackOrderRepository $weRepackOrderRepository;
+    private LoggerInterface $logger;
 
-    public function __construct(WeRepackOrderRepository $weRepackOrderRepository) {
+    public function __construct(WeRepackOrderRepository $weRepackOrderRepository, LoggerInterface $logger) {
         $this->client = new Client([
             'timeout'  => 2.0,
         ]);
         $this->weRepackOrderRepository = $weRepackOrderRepository;
+        $this->logger = $logger;
     }
 
     public function sendTelemetryData(): void {
@@ -36,12 +39,10 @@ class WeRepackTelemetryService
             $response = $this->client->request('POST', self::ENDPOINT_URL, [
                 'form_params' => $data
             ]);
+            $this->logger->info('Successfully transferred WeRepack telemetry data.');
         } catch (GuzzleException $e) {
-            // todo log exeption
-            throw $e;
+            $this->logger->error('Failed to send WeRepack telemetry data.', ['exception' => $e]);
         }
-
-        dump($data, $response);
     }
 
 }
