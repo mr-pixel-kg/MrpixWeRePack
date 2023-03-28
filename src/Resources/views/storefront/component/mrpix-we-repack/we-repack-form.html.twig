@@ -1,0 +1,70 @@
+{% block mrpix_we_repack_form %}
+    {% set cart = page.cart %}
+    {% set hasRepackPromotion = false %}
+    {% set promotionId = null %}
+    {% if config('MrpixWeRepack.config.createPromotionCodes') and config('MrpixWeRepack.config.couponSendingType') == 'cart' and config('MrpixWeRepack.config.repackPromotion') and page.extensions.repackPromotion %}
+        {% for lineItem in cart.lineItems %}
+            {% if lineItem.type == 'promotion' and lineItem.payload.code == page.extensions.repackPromotion.code %}
+                {% set hasRepackPromotion = true %}
+                {% set promotionId = lineItem.id %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
+    {% block mrpix_we_repack_checkbox_form %}
+        {% set action = 'frontend.checkout.configure' %}
+        {% set actionPath = path('frontend.checkout.configure') %}
+        {% set redirect = 'frontend.checkout.confirm.page' %}
+
+        <form id="mrpixWeRepackForm"
+            name="mrpixWeRepackForm"
+            action="{{ actionPath }}"
+            data-form-csrf-handler="true"
+            data-form-auto-submit="true"
+            method="post">
+
+            {% block mrpix_we_repack_checkbox_form_csrf %}
+                {{ sw_csrf(action) }}
+            {% endblock %}
+
+            {% block mrpix_we_repack_checkbox_form_redirect %}
+                <input type="hidden" name="redirectTo" value="{{ redirect }}">
+            {% endblock %}
+
+            {% block mrpix_we_repack_checkbox_form_fields %}
+                {% block mrpix_we_repack_checkbox_form_control %}
+                    <div class="custom-control custom-checkbox">
+                        {% block mrpix_we_repack_form_checkbox %}
+                            <input type="checkbox"
+                                   class="checkout-confirm-we-repack-checkbox {{ formCheckInputClass }}"
+                                   id="mrpixWeRepack"
+                                   {% if page.extensions['MrpixWeRepack'].weRepackEnabled is true %}checked="checked"{% endif %}
+                                   name="mrpixWeRepack"/>
+
+                            <!-- Required, because unchecking the checkbox will otherwise not be detected -->
+                            <input type="hidden" id="mrpixWeRepackPlugin" name="mrpixWeRepackToggle" value="1" />
+                        {% endblock %}
+
+                        {% block mrpix_we_repack_form_checkbox_label %}
+                            <label class="checkout-confirm-we-repack-label custom-control-label"
+                                   for="mrpixWeRepack">
+                                {{ 'mrpixWeRepack.form.labelCheckbox'|trans|sw_sanitize }}
+                            </label>
+                        {% endblock %}
+
+                        {% block mrpix_we_repack_form_coupon_info %}
+                            {% if config('MrpixWeRepack.config.createPromotionCodes') %}
+                                {% if config('MrpixWeRepack.config.couponSendingType') == 'cart' %}
+                                    <span>{{ 'mrpixWeRepack.form.couponInformationCart'|trans|sw_sanitize }}</span>
+                                {% else %}
+                                    <span>{{ 'mrpixWeRepack.form.couponInformationAfterOrder'|trans|sw_sanitize }}</span>
+                                {% endif %}
+                            {% endif %}
+                        {% endblock %}
+                    </div>
+                {% endblock %}
+            {% endblock %}
+        {% endblock %}
+    </form>
+
+{% endblock %}

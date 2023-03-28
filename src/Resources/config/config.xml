@@ -4,7 +4,7 @@
 
     <card>
         <title>Plugin configuration</title>
-        <title lang="de-DE">Plugin Konfiguraiton</title>
+        <title lang="de-DE">Plugin Konfiguration</title>
 
         <input-field type="bool">
             <name>createPromotionCodes</name>
@@ -12,11 +12,29 @@
             <label lang="de-DE">Kunden erhalten einen Gutschein, für die Auswahl der Repack-Liefer Option</label>
         </input-field>
 
+        <input-field type="single-select">
+            <name>couponSendingType</name>
+            <label>Discount type</label>
+            <label lang="de-DE">Rabatttyp</label>
+            <options>
+                <option>
+                    <id>cart</id>
+                    <name>Discount for current cart</name>
+                    <name lang="de-DE">Rabatt für den aktuellen Warenkorb</name>
+                </option>
+                <option>
+                    <id>order</id>
+                    <name>Receive coupon code after order</name>
+                    <name lang="de-DE">Versand eines Codes nach der Bestellung</name>
+                </option>
+            </options>
+        </input-field>
+
         <component name="sw-entity-single-select">
             <name>repackPromotion</name>
             <entity>promotion</entity>
             <label>Choose a coupon, which is sent to customers who select the repack shipping.</label>
-            <label lang="de-DE">Wählen Sie einen Gutschein aus, der an Kunden geschickt wird, die die Repack Option wählen</label>
+            <label lang="de-DE">Wählen Sie einen Gutschein aus, der an Kunden geschickt wird, welche die Repack Option wählen</label>
         </component>
     </card>
 </config>

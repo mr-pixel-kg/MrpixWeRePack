@@ -23,7 +23,7 @@ class OrderExtension extends EntityExtension
                 'id',
                 'order_id',
                 RepackOrderDefinition::class,
-                false
+                true
             )
         );
     }
