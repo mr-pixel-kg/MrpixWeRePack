@@ -43,6 +43,8 @@
         <service id="Mrpix\WeRepack\Subscriber\CheckoutConfirmSubscriber">
             <argument type="service" id="Mrpix\WeRepack\Service\OrderService"/>
             <argument type="service" id="Mrpix\WeRepack\Service\PromotionService"/>
+            <argument type="service" id="Mrpix\WeRepack\Service\MailService"/>
+            <argument type="service" id="Mrpix\WeRepack\Service\ConfigService"/>
             <tag name="kernel.event_subscriber"/>
         </service>
 
@@ -68,6 +70,12 @@
             <argument type="service" id="order.repository"/>
             <argument type="service" id="order_transaction.repository"/>
             <argument type="service" id="mp_repack_order.repository"/>
+        </service>
+
+        <service id="Mrpix\WeRepack\Service\MailService">
+            <argument type="service" id="Shopware\Core\Content\Mail\Service\MailService"/>
+            <argument type="service" id="mail_template_type.repository"/>
+            <argument type="service" id="sales_channel.repository"/>
         </service>
 
         <service id="Mrpix\WeRepack\Service\PromotionService">

@@ -3,6 +3,8 @@
 namespace Mrpix\WeRepack\Subscriber;
 
 use Mrpix\WeRepack\Components\WeRepackSession;
+use Mrpix\WeRepack\Service\ConfigService;
+use Mrpix\WeRepack\Service\MailService;
 use Mrpix\WeRepack\Service\OrderService;
 use Mrpix\WeRepack\Service\PromotionService;
 use Shopware\Core\Checkout\Cart\Event\CheckoutOrderPlacedEvent;
@@ -16,12 +18,16 @@ class CheckoutConfirmSubscriber implements EventSubscriberInterface
     private WeRepackSession $session;
     private OrderService $orderService;
     private PromotionService $promotionService;
+    private MailService $mailService;
+    private ConfigService $configService;
 
-    public function __construct(OrderService $orderService, PromotionService $promotionService)
+    public function __construct(OrderService $orderService, PromotionService $promotionService, MailService $mailService, ConfigService $configService)
     {
         $this->session = new WeRepackSession();
         $this->orderService = $orderService;
         $this->promotionService = $promotionService;
+        $this->mailService = $mailService;
+        $this->configService = $configService;
     }
 
     public static function getSubscribedEvents(): array
@@ -75,16 +81,16 @@ class CheckoutConfirmSubscriber implements EventSubscriberInterface
         }
 
         // create promotion code
-        $this->promotionService->createPromotionIndividualCode($order, $event->getContext());
+        $promotionCode = $this->promotionService->createPromotionIndividualCode($order, $event->getContext());
 
         // send promotion code to customer
-
-        dump('Todo: Send mail', $order);
-        /*$this->mailerService->sendVoucherToCustomer(
+        $this->mailService->send(
             $order,
+            $promotionCode,
+            $this->promotionService->getPromotion($event->getContext()),
+            $event->getContext(),
             $order->getSalesChannelId(),
-            $event->getContext()
-        );*/
+        );
     }
 
     public function onSalesChannelContextSwitch(SalesChannelContextSwitchEvent $event)

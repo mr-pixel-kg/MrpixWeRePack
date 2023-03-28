@@ -27,7 +27,7 @@ class PromotionService
         $this->orderService = $orderService;
     }
 
-    public function createPromotionIndividualCode(OrderEntity $order, Context $context)
+    public function createPromotionIndividualCode(OrderEntity $order, Context $context): string
     {
         // Load promotion from config
         $promotion = $this->getPromotion($context);
@@ -47,6 +47,8 @@ class PromotionService
 
         // Assign individual promotion code to WeRepack order
         $this->orderService->writeIndividualPromotionCodeToWeRepackOrder($order, $individualCodeId, $context);
+
+        return $promotionCode;
     }
 
     public function getPromotion(Context $context): ?PromotionEntity
