@@ -3,7 +3,7 @@
 namespace Mrpix\WeRepack\Core\Checkout;
 
 use LogicException;
-use Mrpix\WeRepack\Components\PromotionLoader;
+use Mrpix\WeRepack\Components\DiscountCalculator;
 use Mrpix\WeRepack\Components\WeRepackSession;
 use Mrpix\WeRepack\Service\ConfigService;
 use Mrpix\WeRepack\Service\PromotionService;
@@ -15,27 +15,20 @@ use Shopware\Core\Checkout\Cart\LineItem\LineItem;
 use Shopware\Core\Checkout\Cart\LineItem\LineItemCollection;
 use Shopware\Core\Checkout\Cart\Price\AbsolutePriceCalculator;
 use Shopware\Core\Checkout\Cart\Price\PercentagePriceCalculator;
-use Shopware\Core\Checkout\Cart\Price\Struct\AbsolutePriceDefinition;
-use Shopware\Core\Checkout\Cart\Price\Struct\PercentagePriceDefinition;
-use Shopware\Core\Checkout\Cart\Rule\LineItemRule;
 use Shopware\Core\Checkout\Promotion\Aggregate\PromotionDiscount\PromotionDiscountEntity;
-use Shopware\Core\Checkout\Promotion\Exception\DiscountCalculatorNotFoundException;
 use Shopware\Core\Checkout\Promotion\PromotionEntity;
-use Shopware\Core\Framework\Rule\Rule;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
 
 class DiscountProcessor implements CartProcessorInterface
 {
-    private PercentagePriceCalculator $percentagePriceCalculator;
-    private AbsolutePriceCalculator $absolutePriceCalculator;
     private WeRepackSession $session;
     private ConfigService $configService;
     private PromotionService $promotionService;
+    private DiscountCalculator $discountCalculator;
 
     public function __construct(PercentagePriceCalculator $percentagePriceCalculator, AbsolutePriceCalculator $absolutePriceCalculator, ConfigService $configService, PromotionService $promotionService)
     {
-        $this->percentagePriceCalculator = $percentagePriceCalculator;
-        $this->absolutePriceCalculator = $absolutePriceCalculator;
+        $this->discountCalculator = new DiscountCalculator($percentagePriceCalculator, $absolutePriceCalculator);
         $this->session = new WeRepackSession();
         $this->configService = $configService;
         $this->promotionService = $promotionService;
@@ -51,17 +44,11 @@ class DiscountProcessor implements CartProcessorInterface
         }
 
         $weRepackPromotion = $this->promotionService->getPromotion($context->getContext());
-        //dump($weRepackPromotion);
+        $products = $this->findProducts($toCalculate);
 
-        $products = $this->findExampleProducts($toCalculate);
-
-        // no example products found? early return
-        if ($products->count() === 0) {
-            return;
-        }
-
-        // Skip if no discount is assigned to the promotion
-        if ($weRepackPromotion->getDiscounts()->count() == 0) {
+        // no products found? skip
+        // no discount is assigned to the promotion? skip
+        if ($products->count() == 0 || $weRepackPromotion->getDiscounts()->count() == 0) {
             return;
         }
 
@@ -77,49 +64,12 @@ class DiscountProcessor implements CartProcessorInterface
             throw new LogicException('The discount in the WeRepack promotion can only be applied to cart!');
         }
 
-        switch ($discount->getType()) {
-            case PromotionDiscountEntity::TYPE_ABSOLUTE:
-                // declare price definition to define how this price is calculated
-                $definition = new AbsolutePriceDefinition(
-                    -$weRepackPromotion->getDiscounts()->first()->getValue(),
-                    new LineItemRule(Rule::OPERATOR_EQ, $products->getKeys())
-                );
-
-                $discountLineItem->setPriceDefinition($definition);
-
-                // calculate price
-                $discountLineItem->setPrice(
-                    $this->absolutePriceCalculator->calculate($definition->getPrice(), $products->getPrices(), $context)
-                );
-
-                break;
-
-            case PromotionDiscountEntity::TYPE_PERCENTAGE:
-                // declare price definition to define how this price is calculated
-                $definition = new PercentagePriceDefinition(
-                    -$weRepackPromotion->getDiscounts()->first()->getValue(),
-                    new LineItemRule(Rule::OPERATOR_EQ, $products->getKeys())
-                );
-
-                $discountLineItem->setPriceDefinition($definition);
-
-                // calculate price
-                $discountLineItem->setPrice(
-                    $this->percentagePriceCalculator->calculate($definition->getPercentage(), $products->getPrices(), $context)
-                );
-
-                break;
-
-            default:
-                throw new DiscountCalculatorNotFoundException($discount->getType());
-        }
-
-
         // add discount to new cart
+        $this->discountCalculator->calculateDiscount($discount, $discountLineItem, $products, $context);
         $toCalculate->add($discountLineItem);
     }
 
-    private function findExampleProducts(Cart $cart): LineItemCollection
+    private function findProducts(Cart $cart): LineItemCollection
     {
         return $cart->getLineItems()->filter(function (LineItem $item) {
             // Only consider products, not custom line items or promotional line items

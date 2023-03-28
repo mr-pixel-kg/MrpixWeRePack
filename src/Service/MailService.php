@@ -4,6 +4,7 @@ namespace Mrpix\WeRepack\Service;
 
 use Mrpix\WeRepack\Repository\SalesChannelRepository;
 use Mrpix\WeRepack\Setup\Setup;
+use Shopware\Core\Checkout\Order\Aggregate\OrderCustomer\OrderCustomerEntity;
 use Shopware\Core\Checkout\Order\OrderEntity;
 use Shopware\Core\Checkout\Promotion\PromotionEntity;
 use Shopware\Core\Content\Mail\Service\AbstractMailService;
@@ -35,36 +36,7 @@ class MailService
             return;
         }
         $customer = $order->getOrderCustomer();
-        $translations = $mailTemplate->getTranslations();
-
-        $data = new DataBag();
-        $data->set(
-            'recipients',
-            [
-                $customer->getEmail() => $customer->getFirstName() . ' ' . $customer->getLastName()
-            ]
-        );
-
-        $data->set('senderName', $mailTemplate->getSenderName());
-
-        if ($translations === null) {
-            $data->set('senderName', $mailTemplate->getSenderName());
-            $data->set('subject', $mailTemplate->getSubject());
-            $data->set('contentPlain', $mailTemplate->getContentPlain());
-            $data->set('contentHtml', $mailTemplate->getContentHtml());
-        } else {
-            foreach ($translations->getElements() as $translation) {
-                if ($translation->getLanguageId() !== $context->getLanguageId()) {
-                    continue;
-                }
-
-                $data->set('senderName', $translation->getSenderName());
-                $data->set('subject', $translation->getSubject());
-                $data->set('contentPlain', $translation->getContentPlain());
-                $data->set('contentHtml', $translation->getContentHtml());
-            }
-        }
-        $data->set('salesChannelId', $salesChannelId);
+        $data = $this->buildMailDataBag($customer, $mailTemplate, $salesChannelId, $context);
 
         $this->mailService->send(
             $data->all(),
@@ -92,5 +64,38 @@ class MailService
         }
 
         return $mailTemplateType->getMailTemplates()->first();
+    }
+
+    private function buildMailDataBag(OrderCustomerEntity $customer, MailTemplateEntity $mailTemplate, string $salesChannelId, Context $context): DataBag
+    {
+        $translations = $mailTemplate->getTranslations();
+        $data = new DataBag();
+        $data->set(
+            'recipients',
+            [
+                $customer->getEmail() => $customer->getFirstName() . ' ' . $customer->getLastName()
+            ]
+        );
+        $data->set('senderName', $mailTemplate->getSenderName());
+        $data->set('salesChannelId', $salesChannelId);
+
+        if ($translations === null) {
+            $data->set('senderName', $mailTemplate->getSenderName());
+            $data->set('subject', $mailTemplate->getSubject());
+            $data->set('contentPlain', $mailTemplate->getContentPlain());
+            $data->set('contentHtml', $mailTemplate->getContentHtml());
+        } else {
+            foreach ($translations->getElements() as $translation) {
+                if ($translation->getLanguageId() !== $context->getLanguageId()) {
+                    continue;
+                }
+                $data->set('senderName', $translation->getSenderName());
+                $data->set('subject', $translation->getSubject());
+                $data->set('contentPlain', $translation->getContentPlain());
+                $data->set('contentHtml', $translation->getContentHtml());
+            }
+        }
+
+        return $data;
     }
 }
