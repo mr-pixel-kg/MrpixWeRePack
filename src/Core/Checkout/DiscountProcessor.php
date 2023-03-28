@@ -2,6 +2,7 @@
 
 namespace Mrpix\WeRepack\Core\Checkout;
 
+use LogicException;
 use Mrpix\WeRepack\Components\PromotionLoader;
 use Mrpix\WeRepack\Components\WeRepackSession;
 use Mrpix\WeRepack\Service\ConfigService;
@@ -43,7 +44,7 @@ class DiscountProcessor implements CartProcessorInterface
     public function process(CartDataCollection $data, Cart $original, Cart $toCalculate, SalesChannelContext $context, CartBehavior $behavior): void
     {
         // if customer selected WeRepack option and WeRepack is enabled for cart, add discount
-        if(!$this->configService->get('createPromotionCodes')
+        if (!$this->configService->get('createPromotionCodes')
             || $this->configService->get('couponSendingType') != 'cart'
             || !$this->session->isWeRepackEnabled()) {
             return;
@@ -60,20 +61,20 @@ class DiscountProcessor implements CartProcessorInterface
         }
 
         // Skip if no discount is assigned to the promotion
-        if($weRepackPromotion->getDiscounts()->count() == 0){
+        if ($weRepackPromotion->getDiscounts()->count() == 0) {
             return;
         }
 
         // Throw error when more than one discount is assigned to WeRepack promotion
-        if($weRepackPromotion->getDiscounts()->count() > 1){
-            throw new \LogicException('Only one discount is allowed for the WeRepack promotion!');
+        if ($weRepackPromotion->getDiscounts()->count() > 1) {
+            throw new LogicException('Only one discount is allowed for the WeRepack promotion!');
         }
 
         $discountLineItem = $this->createDiscount('WEREPACK_DISCOUNT', $weRepackPromotion);
         $discount = $weRepackPromotion->getDiscounts()->first();
 
-        if($discount->getScope() != PromotionDiscountEntity::SCOPE_CART){
-            throw new \LogicException('The discount in the WeRepack promotion can only be applied to cart!');
+        if ($discount->getScope() != PromotionDiscountEntity::SCOPE_CART) {
+            throw new LogicException('The discount in the WeRepack promotion can only be applied to cart!');
         }
 
         switch ($discount->getType()) {

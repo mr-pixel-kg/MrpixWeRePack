@@ -21,7 +21,8 @@ class MailService
     protected EntityRepository $mailTemplateTypeRepository;
     protected EntityRepository $salesChannelRepository;
 
-    public function __construct(AbstractMailService $mailService, EntityRepository $mailTemplateTypeRepository, EntityRepository $salesChannelRepository) {
+    public function __construct(AbstractMailService $mailService, EntityRepository $mailTemplateTypeRepository, EntityRepository $salesChannelRepository)
+    {
         $this->mailService = $mailService;
         $this->mailTemplateTypeRepository = $mailTemplateTypeRepository;
         $this->salesChannelRepository = $salesChannelRepository;
@@ -40,7 +41,7 @@ class MailService
         $data->set(
             'recipients',
             [
-                $customer->getEmail() => $customer->getFirstName().' '.$customer->getLastName()
+                $customer->getEmail() => $customer->getFirstName() . ' ' . $customer->getLastName()
             ]
         );
 

@@ -15,7 +15,8 @@ class OrderService
     protected EntityRepository $orderTransactionRepository;
     protected EntityRepository $weRepackOrderRepository;
 
-    public function __construct(EntityRepository $orderRepository, EntityRepository $orderTransactionRepository, EntityRepository $weRepackOrderRepository) {
+    public function __construct(EntityRepository $orderRepository, EntityRepository $orderTransactionRepository, EntityRepository $weRepackOrderRepository)
+    {
         $this->orderRepository = $orderRepository;
         $this->orderTransactionRepository = $orderTransactionRepository;
         $this->weRepackOrderRepository = $weRepackOrderRepository;

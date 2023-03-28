@@ -2,6 +2,7 @@
 
 namespace Mrpix\WeRepack\Setup;
 
+use Doctrine\DBAL\Exception;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 
@@ -23,16 +24,6 @@ class Uninstaller extends Setup
         $this->mailTemplateTypeRepository->delete([['id' => $mailTemplateTypeId]], $this->context);
     }
 
-    /**
-     * @throws \Doctrine\DBAL\Exception
-     */
-    protected function adjustDatabase(): void
-    {
-        foreach (self::DATABASE_TABLE_NAMES as $table) {
-            $this->connection->executeStatement('DROP TABLE ' . $table);
-        }
-    }
-
     private function getMailTemplateIds(string $mailTemplateTypeId): array
     {
         $criteria = new Criteria();
@@ -40,5 +31,15 @@ class Uninstaller extends Setup
 
         $result = $this->mailTemplateRepository->searchIds($criteria, $this->context);
         return $result->getIds();
+    }
+
+    /**
+     * @throws Exception
+     */
+    protected function adjustDatabase(): void
+    {
+        foreach (self::DATABASE_TABLE_NAMES as $table) {
+            $this->connection->executeStatement('DROP TABLE ' . $table);
+        }
     }
 }

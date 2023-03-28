@@ -2,11 +2,11 @@
 
 namespace Mrpix\WeRepack\Setup;
 
+use Doctrine\DBAL\Connection;
 use Shopware\Core\Defaults;
+use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
-use Doctrine\DBAL\Connection;
-use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 
 abstract class Setup
@@ -25,10 +25,10 @@ abstract class Setup
     protected Connection $connection;
 
     public function __construct(
-        Context $context,
+        Context          $context,
         EntityRepository $mailTemplateTypeRepository,
         EntityRepository $mailTemplateRepository,
-        Connection $connection
+        Connection       $connection
     )
     {
         $this->context = $context;
@@ -43,6 +43,10 @@ abstract class Setup
         $this->adjustDatabase();
     }
 
+    abstract protected function adjustMails(): void;
+
+    abstract protected function adjustDatabase(): void;
+
     protected function getExistingMailTemplateTypeId(string $technicalName): ?string
     {
         $criteria = new Criteria();
@@ -50,7 +54,4 @@ abstract class Setup
 
         return $this->mailTemplateTypeRepository->searchIds($criteria, $this->context)->firstId();
     }
-
-    abstract protected function adjustMails(): void;
-    abstract protected function adjustDatabase(): void;
 }

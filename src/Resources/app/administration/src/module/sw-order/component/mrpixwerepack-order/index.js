@@ -42,7 +42,6 @@ Component.register('sw-customer-werepack', {
         this.repository.search(criteria, Context.api)
             .then(result => {
                 this.weRepackOrder = result.first();
-                console.log(this.weRepackOrder);
             });
     }
 });

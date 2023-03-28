@@ -15,11 +15,6 @@ class Installer extends Setup
         $this->createMailTemplate($mailTemplateTypeId);
     }
 
-    protected function adjustDatabase(): void
-    {
-        // Do nothing
-    }
-
     protected function createMailTemplateTypeId(): string
     {
         $mailTemplateTypeId = Uuid::randomHex();
@@ -68,6 +63,11 @@ class Installer extends Setup
         ];
 
         $this->mailTemplateRepository->create([$mailTemplate], $this->context);
+    }
+
+    protected function adjustDatabase(): void
+    {
+        // Do nothing
     }
 
 }

@@ -16,15 +16,17 @@ class WeRepackTelemetryService
     protected WeRepackOrderRepository $weRepackOrderRepository;
     protected LoggerInterface $logger;
 
-    public function __construct(WeRepackOrderRepository $weRepackOrderRepository, LoggerInterface $logger) {
+    public function __construct(WeRepackOrderRepository $weRepackOrderRepository, LoggerInterface $logger)
+    {
         $this->client = new Client([
-            'timeout'  => 2.0,
+            'timeout' => 2.0,
         ]);
         $this->weRepackOrderRepository = $weRepackOrderRepository;
         $this->logger = $logger;
     }
 
-    public function sendTelemetryData(): void {
+    public function sendTelemetryData(): void
+    {
         $data = [
             'repack_last_sent' => time(),
             'repack_coupon' => 1,
@@ -39,7 +41,7 @@ class WeRepackTelemetryService
             $response = $this->client->request('POST', self::ENDPOINT_URL, [
                 'form_params' => $data
             ]);
-            $this->logger->info('Successfully transferred WeRepack telemetry data.');
+            $this->logger->info('Successfully transferred WeRepack telemetry data.', ['response' => $response]);
         } catch (GuzzleException $e) {
             $this->logger->error('Failed to send WeRepack telemetry data.', ['exception' => $e]);
         }

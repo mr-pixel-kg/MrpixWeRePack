@@ -16,21 +16,21 @@ class ConfigService
 
     public function get(string $key, ?string $salesChannelId = null)
     {
-        return $this->getSystemConfigService()->get(self::SYSTEM_CONFIG_DOMAIN.$key, $salesChannelId);
-    }
-
-    public function set(string $key, string $value, ?string $salesChannelId = null): void
-    {
-        $this->getSystemConfigService()->set(self::SYSTEM_CONFIG_DOMAIN.$key, $value, $salesChannelId);
-    }
-
-    public function delete(string $key, ?string $salesChannelId = null): void
-    {
-        $this->getSystemConfigService()->delete(self::SYSTEM_CONFIG_DOMAIN.$key, $salesChannelId);
+        return $this->getSystemConfigService()->get(self::SYSTEM_CONFIG_DOMAIN . $key, $salesChannelId);
     }
 
     public function getSystemConfigService(): SystemConfigService
     {
         return $this->systemConfigService;
+    }
+
+    public function set(string $key, string $value, ?string $salesChannelId = null): void
+    {
+        $this->getSystemConfigService()->set(self::SYSTEM_CONFIG_DOMAIN . $key, $value, $salesChannelId);
+    }
+
+    public function delete(string $key, ?string $salesChannelId = null): void
+    {
+        $this->getSystemConfigService()->delete(self::SYSTEM_CONFIG_DOMAIN . $key, $salesChannelId);
     }
 }
