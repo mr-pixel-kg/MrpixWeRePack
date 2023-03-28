@@ -29,17 +29,12 @@ class TestCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $io->title("Test");
+        $io->title("WeRepack Test");
 
-        //$this->orderRepository->search(new Criteria(), Context::createDefaultContext())->last()->getId()
+        $url = $io->ask('What is your shop url?');
+        $language = $io->ask('What is your shop language?', 'en');
 
-        /*dump($this->werepackOrderRepository->upsert([[
-            'orderId' => 'c44975df6f71437783b99d0bd32c347d',
-            'promotionIndividualCodeId' => null,
-            'isRepack' => true,
-        ]], Context::createDefaultContext()));*/
-
-        $this->telemetryService->sendTelemetryData();
+        $this->telemetryService->sendTelemetryData($url, $language);
 
         return Command::SUCCESS;
     }

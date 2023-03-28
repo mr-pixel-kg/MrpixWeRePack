@@ -25,7 +25,7 @@ class WeRepackTelemetryService
         $this->logger = $logger;
     }
 
-    public function sendTelemetryData(): void
+    public function sendTelemetryData(string $url, string $language='en'): void
     {
         $data = [
             'repack_last_sent' => time(),
@@ -33,8 +33,8 @@ class WeRepackTelemetryService
             'repack_ratio' => $this->weRepackOrderRepository->getWeRepackRatio(Context::createDefaultContext()),
             'repack_counter' => $this->weRepackOrderRepository->getWeRepackOrderCount(Context::createDefaultContext()),
             'repack_start' => $this->weRepackOrderRepository->getWeRepackStart(Context::createDefaultContext())->getTimestamp(),
-            'site_lang' => 'de',
-            'site_url' => 'https://shop.mr-pixel.de'
+            'site_lang' => $language,
+            'site_url' => $url
         ];
 
         try {
