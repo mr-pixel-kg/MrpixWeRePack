@@ -3,21 +3,25 @@
 namespace Mrpix\WeRepack\Subscriber;
 
 use Mrpix\WeRepack\Components\WeRepackSession;
+use Mrpix\WeRepack\Service\OrderService;
+use Mrpix\WeRepack\Service\PromotionService;
 use Shopware\Core\Checkout\Cart\Event\CheckoutOrderPlacedEvent;
-use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\System\SalesChannel\Event\SalesChannelContextSwitchEvent;
+use Shopware\Core\System\StateMachine\Event\StateMachineStateChangeEvent;
 use Shopware\Storefront\Page\Checkout\Confirm\CheckoutConfirmPageLoadedEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class CheckoutConfirmSubscriber implements EventSubscriberInterface
 {
     private WeRepackSession $session;
-    private EntityRepository $werepackOrderRepository;
+    private OrderService $orderService;
+    private PromotionService $promotionService;
 
-    public function __construct(EntityRepository $werepackOrderRepository)
+    public function __construct(OrderService $orderService, PromotionService $promotionService)
     {
         $this->session = new WeRepackSession();
-        $this->werepackOrderRepository = $werepackOrderRepository;
+        $this->orderService = $orderService;
+        $this->promotionService = $promotionService;
     }
 
     public static function getSubscribedEvents(): array
@@ -25,7 +29,8 @@ class CheckoutConfirmSubscriber implements EventSubscriberInterface
         return [
             CheckoutConfirmPageLoadedEvent::class => 'onCheckoutConfirmPageLoad',
             CheckoutOrderPlacedEvent::class => 'onCheckoutOrderPlaced',
-            SalesChannelContextSwitchEvent::class => 'onSalesChannelContextSwitch'
+            SalesChannelContextSwitchEvent::class => 'onSalesChannelContextSwitch',
+            'state_machine.order_transaction.state_changed' => 'onOrderStateChanged',
         ];
     }
 
@@ -39,14 +44,47 @@ class CheckoutConfirmSubscriber implements EventSubscriberInterface
     public function onCheckoutOrderPlaced(CheckoutOrderPlacedEvent $event)
     {
         // Write WeRepack data to database
-        $this->werepackOrderRepository->upsert([[
-            'orderId' => $event->getOrder()->getId(),
-            'promotionIndividualCodeId' => null,
-            'isRepack' => $this->session->isWeRepackEnabled(),
-        ]], $event->getContext());
+        $this->orderService->writeWeRepackOrder($event->getOrder(), $this->session->isWeRepackEnabled(), $event->getContext());
 
         // Clear session
         $this->session->clear();
+    }
+
+    public function onOrderStateChanged(StateMachineStateChangeEvent $event)
+    {
+        $name = $event->getNextState()->getTechnicalName();
+        if ($name !== 'paid') {
+            return;
+        }
+
+        $order = $this->orderService->getOrderByTransition($event->getTransition(), $event->getContext());
+        if ($order === null) {
+            return;
+        }
+
+        // if customer selected WeRepack option and WeRepack is enabled for next order, create promotion code
+        if(!$this->configService->get('createPromotionCodes')
+            || $this->configService->get('couponSendingType') != 'order'
+            || !$order->getExtension('repackOrder')->isRepack()) {
+            return;
+        }
+
+        // event can be triggered multiple times, but only create promotion code one time
+        if($order->getExtension('repackOrder')->getPromotionIndividualCodeId() != null){
+            return;
+        }
+
+        // create promotion code
+        $this->promotionService->createPromotionIndividualCode($order, $event->getContext());
+
+        // send promotion code to customer
+
+        dump('Todo: Send mail', $order);
+        /*$this->mailerService->sendVoucherToCustomer(
+            $order,
+            $order->getSalesChannelId(),
+            $event->getContext()
+        );*/
     }
 
     public function onSalesChannelContextSwitch(SalesChannelContextSwitchEvent $event)

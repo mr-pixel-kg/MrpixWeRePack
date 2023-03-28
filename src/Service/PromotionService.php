@@ -2,6 +2,7 @@
 
 namespace Mrpix\WeRepack\Service;
 
+use Shopware\Core\Checkout\Order\OrderEntity;
 use Shopware\Core\Checkout\Promotion\PromotionEntity;
 use Shopware\Core\Checkout\Promotion\Util\PromotionCodeService;
 use Shopware\Core\Framework\Context;
@@ -13,32 +14,39 @@ class PromotionService
 {
     protected EntityRepository $promotionRepository;
     protected ConfigService $configService;
-    protected $promotionCodeService;
-    protected $promotionIndividualCodeRepository;
-    protected EntityRepository $weRepackOrderRepository;
+    protected PromotionCodeService $promotionCodeService;
+    protected EntityRepository $promotionIndividualCodeRepository;
+    protected OrderService $orderService;
 
-    public function __construct(EntityRepository $promotionRepository, ConfigService $configService, PromotionCodeService $promotionCodeService, EntityRepository $promotionIndividualCodeRepository, EntityRepository $weRepackOrderRepository)
+    public function __construct(EntityRepository $promotionRepository, ConfigService $configService, PromotionCodeService $promotionCodeService, EntityRepository $promotionIndividualCodeRepository, OrderService $orderService)
     {
         $this->promotionRepository = $promotionRepository;
         $this->configService = $configService;
         $this->promotionCodeService = $promotionCodeService;
         $this->promotionIndividualCodeRepository = $promotionIndividualCodeRepository;
-        $this->weRepackOrderRepository = $weRepackOrderRepository;
+        $this->orderService = $orderService;
     }
 
-    public function createPromotionIndividualCode(string $promotionId) : PromotionEntity
+    public function createPromotionIndividualCode(OrderEntity $order, Context $context)
     {
+        // Load promotion from config
+        $promotion = $this->getPromotion($context);
+
+        // Generate individual promotion code
         $promotionCode = $this->promotionCodeService->getFixedCode();
 
+        // Write individual promotion code to database
         $individualCodeId = Uuid::randomHex();
-        $result = $this->promotionIndividualCodeRepository->upsert([
+        $this->promotionIndividualCodeRepository->upsert([
             [
                 'id' => $individualCodeId,
-                'promotionId' => $promotionId,
+                'promotionId' => $promotion->getId(),
                 'code' => $promotionCode,
             ],
-        ], $this->context);
-        dump(['log' => 'create individual promotion code', 'result' => $result, 'code' => $promotionCode]);
+        ], $context);
+
+        // Assign individual promotion code to WeRepack order
+        $this->orderService->writeIndividualPromotionCodeToWeRepackOrder($order, $individualCodeId, $context);
     }
 
     public function getPromotion(Context $context): ?PromotionEntity
