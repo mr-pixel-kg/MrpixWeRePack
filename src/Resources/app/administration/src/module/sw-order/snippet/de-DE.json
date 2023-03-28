@@ -1,0 +1,12 @@
+{
+  "mrpixwerepack": {
+    "order": {
+      "title": "mpXweRepack",
+      "weRepackSelected": "WeRepack-Bestellung",
+      "weRepackNotSelected": "Keine WeRepack-Bestellung",
+      "voucher": "Gutschein",
+      "noVoucher": "Kein Gutschein vergeben",
+      "notAvailable": "nicht verfügbar"
+    }
+  }
+}

@@ -2,7 +2,7 @@
 
 namespace Mrpix\WeRepack\Subscriber;
 
-use Mrpix\WeRepack\Components\PromotionLoader;
+use Mrpix\WeRepack\Service\PromotionService;
 use Shopware\Core\System\SystemConfig\SystemConfigService;
 use Shopware\Storefront\Page\GenericPageLoadedEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -10,12 +10,12 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class StorefrontSubscriber implements EventSubscriberInterface
 {
     private SystemConfigService $configService;
-    private PromotionLoader $promotionLoader;
+    private PromotionService $promotionService;
 
-    public function __construct(SystemConfigService $configService, PromotionLoader $promotionLoader)
+    public function __construct(SystemConfigService $configService, PromotionService $promotionService)
     {
         $this->configService = $configService;
-        $this->promotionLoader = $promotionLoader;
+        $this->promotionService = $promotionService;
     }
 
     public static function getSubscribedEvents(): array
@@ -33,7 +33,7 @@ class StorefrontSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $promotion = $this->promotionLoader->getPromotion($event->getContext());
+        $promotion = $this->promotionService->getPromotion($event->getContext());
         if ($promotion === null) {
             return;
         }

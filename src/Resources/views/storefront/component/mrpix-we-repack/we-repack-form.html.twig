@@ -11,68 +11,60 @@
         {% endfor %}
     {% endif %}
 
-    <form action="{% if not hasRepackPromotion %}{{ path('frontend.checkout.promotion.add') }}{% else %}{{ path('frontend.checkout.line-item.delete', {'id': promotionId }) }}{% endif %}"
-          class="cart-we-repack-form js-offcanvas-cart-add-we-repack"
-          method="post">
-        {% if not hasRepackPromotion %}
-            {{ sw_csrf('frontend.checkout.promotion.add') }}
-        {% else %}
-            {{ sw_csrf('frontend.checkout.line-item.delete') }}
-        {% endif %}
+    {% block mrpix_we_repack_checkbox_form %}
+        {% set action = 'frontend.checkout.configure' %}
+        {% set actionPath = path('frontend.checkout.configure') %}
+        {% set redirect = 'frontend.checkout.confirm.page' %}
 
-        {% block mrpix_we_repack_form_checkbox %}
-            <input type="checkbox" name="weRepackShipping"
-                   id="weRepackShipping"{% if hasRepackPromotion %} checked{% endif %} />
-        {% endblock %}
+        <form id="mrpixWeRepackForm"
+            name="mrpixWeRepackForm"
+            action="{{ actionPath }}"
+            data-form-csrf-handler="true"
+            data-form-auto-submit="true"
+            method="post">
 
-        {% block mrpix_we_repack_form_checkbox_label %}
-            <label for="weRepackShipping">{{ 'mrpixWeRepack.form.labelCheckbox'|trans|sw_sanitize }}</label>
-        {% endblock %}
+            {% block mrpix_we_repack_checkbox_form_csrf %}
+                {{ sw_csrf(action) }}
+            {% endblock %}
 
-        {% block mrpix_we_repack_form_coupon_info %}
-            {% if config('MrpixWeRepack.config.createPromotionCodes') %}
-                {% if config('MrpixWeRepack.config.couponSendingType') == 'cart' %}
-                    <span>{{ 'mrpixWeRepack.form.couponInformationCart'|trans|sw_sanitize }}</span>
-                {% else %}
-                    <span>{{ 'mrpixWeRepack.form.couponInformationAfterOrder'|trans|sw_sanitize }}</span>
-                {% endif %}
-            {% endif %}
-        {% endblock %}
+            {% block mrpix_we_repack_checkbox_form_redirect %}
+                <input type="hidden" name="redirectTo" value="{{ redirect }}">
+            {% endblock %}
 
-        {% block mrpix_we_repack_form_redirect_input %}
-            <input type="hidden"
-                   name="redirectTo"
-                   value="frontend.checkout.cart.page">
-        {% endblock %}
+            {% block mrpix_we_repack_checkbox_form_fields %}
+                {% block mrpix_we_repack_checkbox_form_control %}
+                    <div class="custom-control custom-checkbox">
+                        {% block mrpix_we_repack_form_checkbox %}
+                            <input type="checkbox"
+                                   class="checkout-confirm-we-repack-checkbox {{ formCheckInputClass }}"
+                                   id="mrpixWeRepack"
+                                   {% if page.extensions['MrpixWeRepack'].weRepackEnabled is true %}checked="checked"{% endif %}
+                                   name="mrpixWeRepack"/>
 
-        {% block mrpix_we_repack_form_promotion_info %}
-            {% if page.extensions.repackPromotion and not hasRepackPromotion %}
-                {% set promotion = page.extensions.repackPromotion %}
-                <input type="hidden"
-                       name="lineItems[{{ promotion.id }}][id]"
-                       value="{{ promotion.id }}">
-                <input type="hidden"
-                       name="lineItems[{{ promotion.id }}][type]"
-                       value="promotion">
-                <input type="hidden"
-                       name="lineItems[{{ promotion.id }}][referencedId]"
-                       value="{{ promotion.id }}">
-                <input type="hidden"
-                       name="lineItems[{{ promotion.id }}][stackable]"
-                       value="1">
-                <input type="hidden"
-                       name="lineItems[{{ promotion.id }}][removable]"
-                       value="1">
-                <input type="hidden"
-                       name="lineItems[{{ promotion.id }}][quantity]"
-                       value="1"/>
-                <input type="hidden"
-                       name="lineItems[{{ promotion.id }}][name]"
-                       value="{{ promotion.translated.name }}">
-                <input type="hidden"
-                       name="code"
-                       value="{{ promotion.code }}"/>
-            {% endif %}
+                            <!-- Required, because unchecking the checkbox will otherwise not be detected -->
+                            <input type="hidden" id="mrpixWeRepackPlugin" name="mrpixWeRepackToggle" value="1" />
+                        {% endblock %}
+
+                        {% block mrpix_we_repack_form_checkbox_label %}
+                            <label class="checkout-confirm-we-repack-label custom-control-label"
+                                   for="mrpixWeRepack">
+                                {{ 'mrpixWeRepack.form.labelCheckbox'|trans|sw_sanitize }}
+                            </label>
+                        {% endblock %}
+
+                        {% block mrpix_we_repack_form_coupon_info %}
+                            {% if config('MrpixWeRepack.config.createPromotionCodes') %}
+                                {% if config('MrpixWeRepack.config.couponSendingType') == 'cart' %}
+                                    <span>{{ 'mrpixWeRepack.form.couponInformationCart'|trans|sw_sanitize }}</span>
+                                {% else %}
+                                    <span>{{ 'mrpixWeRepack.form.couponInformationAfterOrder'|trans|sw_sanitize }}</span>
+                                {% endif %}
+                            {% endif %}
+                        {% endblock %}
+                    </div>
+                {% endblock %}
+            {% endblock %}
         {% endblock %}
     </form>
+
 {% endblock %}

@@ -9,15 +9,10 @@ class Installer extends Setup
 {
     protected function adjustMails(): void
     {
-        $existingMailTemplateTypeId = $this->getExistingMailTemplateTypeId(self::TEMPLATE_TYPE_TECHNICAL_NAME);
+        $existingMailTemplateTypeId = $this->getExistingMailTemplateTypeId(self::MAIL_TEMPLATE_TYPE_TECHNICAL_NAME);
         $mailTemplateTypeId = $existingMailTemplateTypeId !== null ? $existingMailTemplateTypeId : $this->createMailTemplateTypeId();
 
         $this->createMailTemplate($mailTemplateTypeId);
-    }
-
-    protected function adjustDatabase(): void
-    {
-        // Do nothing
     }
 
     protected function createMailTemplateTypeId(): string
@@ -25,8 +20,8 @@ class Installer extends Setup
         $mailTemplateTypeId = Uuid::randomHex();
         $mailTemplateType = [
             'id' => $mailTemplateTypeId,
-            'name' => self::TEMPLATE_TYPE_NAME,
-            'technicalName' => self::TEMPLATE_TYPE_TECHNICAL_NAME,
+            'name' => self::MAIL_TEMPLATE_TYPE_NAME,
+            'technicalName' => self::MAIL_TEMPLATE_TYPE_TECHNICAL_NAME,
             'availableEntities' => [
                 'promotionIndividualCode' => 'promotionIndividualCode',
                 'salesChannel' => 'salesChannel'
@@ -68,6 +63,11 @@ class Installer extends Setup
         ];
 
         $this->mailTemplateRepository->create([$mailTemplate], $this->context);
+    }
+
+    protected function adjustDatabase(): void
+    {
+        // Do nothing
     }
 
 }

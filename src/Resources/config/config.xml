@@ -4,7 +4,7 @@
 
     <card>
         <title>Plugin configuration</title>
-        <title lang="de-DE">Plugin Konfiguraiton</title>
+        <title lang="de-DE">Plugin Konfiguration</title>
 
         <input-field type="bool">
             <name>createPromotionCodes</name>
@@ -34,7 +34,7 @@
             <name>repackPromotion</name>
             <entity>promotion</entity>
             <label>Choose a coupon, which is sent to customers who select the repack shipping.</label>
-            <label lang="de-DE">Wählen Sie einen Gutschein aus, der an Kunden geschickt wird, die die Repack Option wählen</label>
+            <label lang="de-DE">Wählen Sie einen Gutschein aus, der an Kunden geschickt wird, welche die Repack Option wählen</label>
         </component>
     </card>
 </config>

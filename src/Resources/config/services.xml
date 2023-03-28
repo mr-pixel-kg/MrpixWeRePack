@@ -5,10 +5,9 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <!-- Components -->
-        <service id="Mrpix\WeRepack\Components\PromotionLoader">
-            <argument type="service" id="promotion.repository"/>
-            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+        <!-- Processors -->
+        <service id="Mrpix\WeRepack\Core\Checkout\DiscountProcessor" autowire="true">
+            <tag name="shopware.cart.processor" priority="4500"/>
         </service>
 
         <!-- Entities -->
@@ -18,7 +17,7 @@
 
         <!-- Entity Extensions -->
         <service id="Mrpix\WeRepack\Extension\Content\Order\OrderExtension">
-            <tag name="shopware.entity.exension"/>
+            <tag name="shopware.entity.extension"/>
         </service>
 
         <service id="Mrpix\WeRepack\Extension\Content\PromotionIndividualCode\PromotionIndividualCodeExtension">
@@ -37,8 +36,66 @@
         <!-- Subscriber -->
         <service id="Mrpix\WeRepack\Subscriber\StorefrontSubscriber">
             <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
-            <argument type="service" id="Mrpix\WeRepack\Components\PromotionLoader"/>
+            <argument type="service" id="Mrpix\WeRepack\Service\PromotionService"/>
             <tag name="kernel.event_subscriber"/>
+        </service>
+
+        <service id="Mrpix\WeRepack\Subscriber\CheckoutConfirmSubscriber">
+            <argument type="service" id="Mrpix\WeRepack\Service\OrderService"/>
+            <argument type="service" id="Mrpix\WeRepack\Service\PromotionService"/>
+            <argument type="service" id="Mrpix\WeRepack\Service\MailService"/>
+            <argument type="service" id="Mrpix\WeRepack\Service\ConfigService"/>
+            <argument type="service" id="Mrpix\WeRepack\Service\WeRepackTelemetryService"/>
+            <argument type="service" id="Mrpix\WeRepack\Repository\SalesChannelRepository"/>
+            <tag name="kernel.event_subscriber"/>
+        </service>
+
+        <!-- Commands -->
+        <service id="Mrpix\WeRepack\Command\TestCommand">
+            <argument type="service" id="mp_repack_order.repository"/>
+            <argument type="service" id="order.repository"/>
+            <argument type="service" id="Mrpix\WeRepack\Service\WeRepackTelemetryService"/>
+            <tag name="console.command" />
+        </service>
+
+        <!-- Services -->
+        <service id="Mrpix\WeRepack\Service\WeRepackTelemetryService">
+            <argument type="service" id="Mrpix\WeRepack\Repository\WeRepackOrderRepository"/>
+            <argument type="service" id="Mrpix\WeRepack\Service\ConfigService"/>
+            <argument type="service" id="logger" />
+        </service>
+
+        <service id="Mrpix\WeRepack\Service\ConfigService">
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+        </service>
+
+        <service id="Mrpix\WeRepack\Service\OrderService">
+            <argument type="service" id="order.repository"/>
+            <argument type="service" id="order_transaction.repository"/>
+            <argument type="service" id="mp_repack_order.repository"/>
+        </service>
+
+        <service id="Mrpix\WeRepack\Service\MailService">
+            <argument type="service" id="Shopware\Core\Content\Mail\Service\MailService"/>
+            <argument type="service" id="mail_template_type.repository"/>
+            <argument type="service" id="Mrpix\WeRepack\Repository\SalesChannelRepository"/>
+        </service>
+
+        <service id="Mrpix\WeRepack\Service\PromotionService">
+            <argument type="service" id="promotion.repository"/>
+            <argument type="service" id="Mrpix\WeRepack\Service\ConfigService"/>
+            <argument type="service" id="Shopware\Core\Checkout\Promotion\Util\PromotionCodeService"/>
+            <argument type="service" id="promotion_individual_code.repository" />
+            <argument type="service" id="Mrpix\WeRepack\Service\OrderService"/>
+        </service>
+
+        <!-- Repositories -->
+        <service id="Mrpix\WeRepack\Repository\WeRepackOrderRepository">
+            <argument type="service" id="mp_repack_order.repository"/>
+        </service>
+
+        <service id="Mrpix\WeRepack\Repository\SalesChannelRepository">
+            <argument type="service" id="sales_channel.repository"/>
         </service>
     </services>
 </container>

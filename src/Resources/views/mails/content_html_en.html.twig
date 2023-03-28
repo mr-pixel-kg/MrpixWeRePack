@@ -1,1 +1,3 @@
-<!-- TODO: implement file -->
+<p>Dear {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},</p>
+<p>your personal WeRepack voucher code is "{{ promotionCode }}". The voucher can be redeemed by entering the given code in our online shop <a href="{{ salesChannel.domains|first.url }}">{{ salesChannel.domains|first.url }}</a></p>
+<p>Your team from {{ salesChannel.name }}</p>

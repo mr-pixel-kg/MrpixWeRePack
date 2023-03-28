@@ -1,0 +1,12 @@
+{
+  "mrpixwerepack": {
+    "order": {
+      "title": "mpXweRepack",
+      "weRepackSelected": "WeRepack order",
+      "weRepackNotSelected": "No WeRepack order",
+      "voucher": "Voucher",
+      "noVoucher": "No voucher assigned",
+      "notAvailable": "not available"
+    }
+  }
+}

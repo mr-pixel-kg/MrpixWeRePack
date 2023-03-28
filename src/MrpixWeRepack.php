@@ -19,20 +19,6 @@ class MrpixWeRepack extends Plugin
         $this->runSetup($installContext->getContext());
     }
 
-    public function update(UpdateContext $updateContext): void
-    {
-        $this->runSetup($updateContext->getContext());
-    }
-
-    public function uninstall(UninstallContext $uninstallContext): void
-    {
-        if ($uninstallContext->keepUserData()) {
-            return;
-        }
-
-        $this->runSetup($uninstallContext->getContext(), false);
-    }
-
     private function runSetup(Context $context, bool $isInstall = true): void
     {
         /** @var EntityRepositoryInterface $mailTemplateTypeRepository */
@@ -61,5 +47,19 @@ class MrpixWeRepack extends Plugin
         }
 
         $runner->run();
+    }
+
+    public function update(UpdateContext $updateContext): void
+    {
+        $this->runSetup($updateContext->getContext());
+    }
+
+    public function uninstall(UninstallContext $uninstallContext): void
+    {
+        if ($uninstallContext->keepUserData()) {
+            return;
+        }
+
+        $this->runSetup($uninstallContext->getContext(), false);
     }
 }
