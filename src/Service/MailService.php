@@ -2,6 +2,7 @@
 
 namespace Mrpix\WeRepack\Service;
 
+use Mrpix\WeRepack\Repository\SalesChannelRepository;
 use Mrpix\WeRepack\Setup\Setup;
 use Shopware\Core\Checkout\Order\OrderEntity;
 use Shopware\Core\Checkout\Promotion\PromotionEntity;
@@ -13,15 +14,14 @@ use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 use Shopware\Core\Framework\Validation\DataBag\DataBag;
-use Shopware\Core\System\SalesChannel\SalesChannelEntity;
 
 class MailService
 {
     protected AbstractMailService $mailService;
     protected EntityRepository $mailTemplateTypeRepository;
-    protected EntityRepository $salesChannelRepository;
+    protected SalesChannelRepository $salesChannelRepository;
 
-    public function __construct(AbstractMailService $mailService, EntityRepository $mailTemplateTypeRepository, EntityRepository $salesChannelRepository)
+    public function __construct(AbstractMailService $mailService, EntityRepository $mailTemplateTypeRepository, SalesChannelRepository $salesChannelRepository)
     {
         $this->mailService = $mailService;
         $this->mailTemplateTypeRepository = $mailTemplateTypeRepository;
@@ -70,7 +70,7 @@ class MailService
             $data->all(),
             $context, [
                 'order' => $order,
-                'salesChannel' => $this->getSalesChannel($salesChannelId, $context),
+                'salesChannel' => $this->salesChannelRepository->getSalesChannel($salesChannelId, $context),
                 'promotionCode' => $promotionCode,
                 'promotion' => $promotionCode
             ]
@@ -92,13 +92,5 @@ class MailService
         }
 
         return $mailTemplateType->getMailTemplates()->first();
-    }
-
-    private function getSalesChannel(string $salesChannelId, Context $context): ?SalesChannelEntity
-    {
-        $criteria = new Criteria([$salesChannelId]);
-        $criteria->addAssociation('domains');
-
-        return $this->salesChannelRepository->search($criteria, $context)->first();
     }
 }

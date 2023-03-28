@@ -45,6 +45,8 @@
             <argument type="service" id="Mrpix\WeRepack\Service\PromotionService"/>
             <argument type="service" id="Mrpix\WeRepack\Service\MailService"/>
             <argument type="service" id="Mrpix\WeRepack\Service\ConfigService"/>
+            <argument type="service" id="Mrpix\WeRepack\Service\WeRepackTelemetryService"/>
+            <argument type="service" id="Mrpix\WeRepack\Repository\SalesChannelRepository"/>
             <tag name="kernel.event_subscriber"/>
         </service>
 
@@ -59,6 +61,7 @@
         <!-- Services -->
         <service id="Mrpix\WeRepack\Service\WeRepackTelemetryService">
             <argument type="service" id="Mrpix\WeRepack\Repository\WeRepackOrderRepository"/>
+            <argument type="service" id="Mrpix\WeRepack\Service\ConfigService"/>
             <argument type="service" id="logger" />
         </service>
 
@@ -75,7 +78,7 @@
         <service id="Mrpix\WeRepack\Service\MailService">
             <argument type="service" id="Shopware\Core\Content\Mail\Service\MailService"/>
             <argument type="service" id="mail_template_type.repository"/>
-            <argument type="service" id="sales_channel.repository"/>
+            <argument type="service" id="Mrpix\WeRepack\Repository\SalesChannelRepository"/>
         </service>
 
         <service id="Mrpix\WeRepack\Service\PromotionService">
@@ -89,6 +92,10 @@
         <!-- Repositories -->
         <service id="Mrpix\WeRepack\Repository\WeRepackOrderRepository">
             <argument type="service" id="mp_repack_order.repository"/>
+        </service>
+
+        <service id="Mrpix\WeRepack\Repository\SalesChannelRepository">
+            <argument type="service" id="sales_channel.repository"/>
         </service>
     </services>
 </container>
