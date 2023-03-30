@@ -2,7 +2,7 @@
     "name": "mrpix/we-repack",
     "description": "mpXweRepack",
     "type": "shopware-platform-plugin",
-    "license": "MIT",
+    "license": "proprietary",
     "version": "1.0.0",
     "authors": [
         {
