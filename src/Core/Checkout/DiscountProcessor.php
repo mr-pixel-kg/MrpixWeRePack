@@ -36,14 +36,16 @@ class DiscountProcessor implements CartProcessorInterface
 
     public function process(CartDataCollection $data, Cart $original, Cart $toCalculate, SalesChannelContext $context, CartBehavior $behavior): void
     {
+        $salesChannelId = $context->getSalesChannelId();
+
         // if customer selected WeRepack option and WeRepack is enabled for cart, add discount
-        if (!$this->configService->get('createPromotionCodes')
-            || $this->configService->get('couponSendingType') != 'cart'
+        if (!$this->configService->get('createPromotionCodes', $salesChannelId)
+            || $this->configService->get('couponSendingType', $salesChannelId) != 'cart'
             || !$this->session->isWeRepackEnabled()) {
             return;
         }
 
-        $weRepackPromotion = $this->promotionService->getPromotion($context->getContext());
+        $weRepackPromotion = $this->promotionService->getPromotion($context->getContext(), $salesChannelId);
         $products = $this->findProducts($toCalculate);
 
         // no products found? skip

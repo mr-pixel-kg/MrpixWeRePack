@@ -27,10 +27,10 @@ class PromotionService
         $this->orderService = $orderService;
     }
 
-    public function createPromotionIndividualCode(OrderEntity $order, Context $context): string
+    public function createPromotionIndividualCode(OrderEntity $order, Context $context, string $salesChannelId): string
     {
         // Load promotion from config
-        $promotion = $this->getPromotion($context);
+        $promotion = $this->getPromotion($context, $salesChannelId);
 
         // Generate individual promotion code
         $promotionCode = $this->promotionCodeService->getFixedCode();
@@ -51,9 +51,9 @@ class PromotionService
         return $promotionCode;
     }
 
-    public function getPromotion(Context $context): ?PromotionEntity
+    public function getPromotion(Context $context, string $salesChannelId): ?PromotionEntity
     {
-        $promotionId = $this->configService->get('repackPromotion');
+        $promotionId = $this->configService->get('repackPromotion', $salesChannelId);
         if (empty($promotionId)) {
             return null;
         }
