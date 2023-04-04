@@ -99,7 +99,6 @@ class CheckoutConfirmSubscriber implements EventSubscriberInterface
         $this->mailService->send(
             $order,
             $promotionCode,
-            $this->promotionService->getPromotion($event->getContext()),
             $event->getContext(),
             $order->getSalesChannelId(),
         );

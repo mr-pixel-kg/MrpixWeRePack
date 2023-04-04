@@ -6,7 +6,6 @@ use Mrpix\WeRepack\Repository\SalesChannelRepository;
 use Mrpix\WeRepack\Setup\Setup;
 use Shopware\Core\Checkout\Order\Aggregate\OrderCustomer\OrderCustomerEntity;
 use Shopware\Core\Checkout\Order\OrderEntity;
-use Shopware\Core\Checkout\Promotion\PromotionEntity;
 use Shopware\Core\Content\Mail\Service\AbstractMailService;
 use Shopware\Core\Content\MailTemplate\Aggregate\MailTemplateType\MailTemplateTypeEntity;
 use Shopware\Core\Content\MailTemplate\MailTemplateEntity;
@@ -29,7 +28,7 @@ class MailService
         $this->salesChannelRepository = $salesChannelRepository;
     }
 
-    public function send(OrderEntity $order, string $promotionCode, PromotionEntity $promotion, Context $context, string $salesChannelId)
+    public function send(OrderEntity $order, string $promotionCode, Context $context, string $salesChannelId)
     {
         $mailTemplate = $this->getMailTemplate($context);
         if ($mailTemplate === null) {
