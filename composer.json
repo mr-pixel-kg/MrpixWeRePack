@@ -1,12 +1,14 @@
 {
     "name": "mrpix/we-repack",
-    "description": "mpXweRepack",
+    "description": "mpXweRepack - WeRepack Integration for Shopware",
     "type": "shopware-platform-plugin",
     "license": "proprietary",
     "version": "1.0.0",
     "authors": [
         {
-            "name": "mr. pixel KG"
+            "name": "mr. pixel KG",
+            "email": "support@mr-pixel.de",
+            "homepage": "https://mr-pixel.de"
         }
     ],
     "autoload": {
@@ -17,8 +19,12 @@
     "extra": {
         "shopware-plugin-class": "Mrpix\\WeRepack\\MrpixWeRepack",
         "label": {
-            "de-DE": "mpXweRepack - We Repack Integration",
-            "en-GB": "mpXweRepack - We Repack Integration"
+            "de-DE": "mpXweRepack - WeRepack Integration",
+            "en-GB": "mpXweRepack - WeRepack Integration"
+        },
+        "description": {
+            "en-GB": "With WeRepack, sustainability is very simple: Packaging waste is minimized because customers can easily choose to receive reused shipping packaging using a checkbox.",
+            "de-DE": "Mit WeRepack ist Nachhaltigkeit ganz einfach: Verpackungsmüll wird minimiert, denn Kunden können ganz einfach durch eine Checkbox wählen, wiederverwendete Versandverpackung zu erhalten."
         },
         "copyright": "(c) by mr. pixel KG",
         "manufacturerLink": {
