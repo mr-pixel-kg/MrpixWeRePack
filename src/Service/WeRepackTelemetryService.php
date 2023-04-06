@@ -27,14 +27,15 @@ class WeRepackTelemetryService
         $this->logger = $logger;
     }
 
-    public function sendTelemetryData(string $url, string $language='en'): void
+    public function sendTelemetryData(string $url, string $language = 'en'): void
     {
+        $context = Context::createDefaultContext();
         $data = [
             'repack_last_sent' => time(),
-            'repack_coupon' => ($this->configService->get('createPromotionCodes'))?'1':'0',
-            'repack_ratio' => $this->weRepackOrderRepository->getWeRepackRatio(Context::createDefaultContext()),
-            'repack_counter' => $this->weRepackOrderRepository->getWeRepackOrderCount(Context::createDefaultContext()),
-            'repack_start' => $this->weRepackOrderRepository->getWeRepackStart(Context::createDefaultContext())->getTimestamp(),
+            'repack_coupon' => ($this->configService->get('createPromotionCodes')) ? '1' : '0',
+            'repack_ratio' => $this->weRepackOrderRepository->getWeRepackRatio($context),
+            'repack_counter' => $this->weRepackOrderRepository->getWeRepackOrderCount($context),
+            'repack_start' => $this->weRepackOrderRepository->getWeRepackStart($context)->getTimestamp(),
             'site_lang' => $language,
             'site_url' => $url
         ];

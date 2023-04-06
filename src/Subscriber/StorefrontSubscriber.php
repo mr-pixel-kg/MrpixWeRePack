@@ -27,13 +27,14 @@ class StorefrontSubscriber implements EventSubscriberInterface
 
     public function onPageLoaded(GenericPageLoadedEvent $event): void
     {
-        if (!$this->configService->get('MrpixWeRepack.config.createPromotionCodes') ||
-            $this->configService->get('MrpixWeRepack.config.couponSendingType') !== 'cart' ||
-            !$this->configService->get('MrpixWeRepack.config.repackPromotion')) {
+        $salesChannelId = $event->getSalesChannelContext()->getSalesChannelId();
+        if (!$this->configService->get('MrpixWeRepack.config.createPromotionCodes', $salesChannelId) ||
+            $this->configService->get('MrpixWeRepack.config.couponSendingType', $salesChannelId) !== 'cart' ||
+            !$this->configService->get('MrpixWeRepack.config.repackPromotion', $salesChannelId)) {
             return;
         }
 
-        $promotion = $this->promotionService->getPromotion($event->getContext());
+        $promotion = $this->promotionService->getPromotion($event->getContext(), $salesChannelId);
         if ($promotion === null) {
             return;
         }

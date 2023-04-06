@@ -1,5 +1,6 @@
 {
     "mrpixWeRepack": {
+        "title": "WeRePack Initiative",
         "form": {
             "labelCheckbox": "Verpackung wiederverwenden, falls verfügbar.",
             "couponInformationAfterOrder": "Durch die Zustimmung wird der Versand mit einer bereits versendeten Verpackung bevorzugt. Als Dankeschön erhalten Sie nach der Bestellung einen Gutschein.",

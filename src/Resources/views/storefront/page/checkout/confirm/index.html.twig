@@ -3,8 +3,15 @@
 {% block page_checkout_confirm_product_table %}
     {{ parent() }}
     {% if page.cart.lineItems|length >= 1 %}
-        <div class="we-repack-checkbox">
-            {% sw_include '@MrpixWeRepack/storefront/component/mrpix-we-repack/we-repack-form.html.twig' %}
+        <div class="we-repack">
+            <div class="card checkout-card">
+                <div class="card-body">
+                    <div class="card-title">{{ 'mrpixWeRepack.title'|trans|sw_sanitize }}</div>
+                    <div class="we-repack-checkbox">
+                        {% sw_include '@MrpixWeRepack/storefront/component/mrpix-we-repack/we-repack-form.html.twig' %}
+                    </div>
+                </div>
+            </div>
         </div>
     {% endif %}
 {% endblock %}

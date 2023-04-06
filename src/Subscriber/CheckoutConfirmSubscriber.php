@@ -81,8 +81,9 @@ class CheckoutConfirmSubscriber implements EventSubscriberInterface
         }
 
         // if customer selected WeRepack option and WeRepack is enabled for next order, create promotion code
-        if (!$this->configService->get('createPromotionCodes')
-            || $this->configService->get('couponSendingType') != 'order'
+        $salesChannelId = $order->getSalesChannelId();
+        if (!$this->configService->get('createPromotionCodes', $salesChannelId)
+            || $this->configService->get('couponSendingType', $salesChannelId) != 'order'
             || !$order->getExtension('repackOrder')->isRepack()) {
             return;
         }
@@ -93,15 +94,14 @@ class CheckoutConfirmSubscriber implements EventSubscriberInterface
         }
 
         // create promotion code
-        $promotionCode = $this->promotionService->createPromotionIndividualCode($order, $event->getContext());
+        $promotionCode = $this->promotionService->createPromotionIndividualCode($order, $event->getContext(), $salesChannelId);
 
         // send promotion code to customer
         $this->mailService->send(
             $order,
             $promotionCode,
-            $this->promotionService->getPromotion($event->getContext()),
             $event->getContext(),
-            $order->getSalesChannelId(),
+            $salesChannelId,
         );
     }
 
