@@ -88,5 +88,15 @@
         <service id="Mrpix\WeRepack\Repository\SalesChannelRepository">
             <argument type="service" id="sales_channel.repository"/>
         </service>
+
+        <!-- Scheduled Task -->
+        <service id="Mrpix\WeRepack\Service\TelemetryService\TelemetrySyncTask">
+            <tag name="shopware.scheduled.task" />
+        </service>
+
+        <service id="Mrpix\WeRepack\Service\TelemetryService\TelemetrySyncTaskHandler">
+            <argument type="service" id="scheduled_task.repository" />
+            <tag name="messenger.message_handler" />
+        </service>
     </services>
 </container>

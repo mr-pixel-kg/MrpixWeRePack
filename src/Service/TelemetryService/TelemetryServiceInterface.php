@@ -9,4 +9,6 @@ interface TelemetryServiceInterface
 
     public function send(TelemetryPacket $telemetryPacket);
 
+    public function synchronize();
+
 }

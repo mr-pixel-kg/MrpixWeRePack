@@ -55,4 +55,9 @@ class TelemetryService implements TelemetryServiceInterface
             $this->logger->error('Failed to send WeRepack telemetry data.', ['exception' => $e]);
         }
     }
+
+    public function synchronize()
+    {
+        // TODO: Implement synchronize() method.
+    }
 }
