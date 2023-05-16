@@ -2,7 +2,7 @@
 
 namespace Mrpix\WeRepack\Command;
 
-use Mrpix\WeRepack\Service\WeRepackTelemetryService;
+use Mrpix\WeRepack\Service\TelemetryService\TelemetryServiceInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -15,9 +15,9 @@ class TestCommand extends Command
 
     private EntityRepository $werepackOrderRepository;
     private EntityRepository $orderRepository;
-    private WeRepackTelemetryService $telemetryService;
+    private TelemetryServiceInterface $telemetryService;
 
-    public function __construct(EntityRepository $werepackOrderRepository, EntityRepository $orderRepository, WeRepackTelemetryService $telemetryService)
+    public function __construct(EntityRepository $werepackOrderRepository, EntityRepository $orderRepository, TelemetryServiceInterface $telemetryService)
     {
         parent::__construct(null);
         $this->werepackOrderRepository = $werepackOrderRepository;

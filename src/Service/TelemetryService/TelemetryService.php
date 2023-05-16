@@ -1,14 +1,15 @@
 <?php
 
-namespace Mrpix\WeRepack\Service;
+namespace Mrpix\WeRepack\Service\TelemetryService;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Mrpix\WeRepack\Repository\WeRepackOrderRepository;
+use Mrpix\WeRepack\Service\ConfigService;
 use Psr\Log\LoggerInterface;
 use Shopware\Core\Framework\Context;
 
-class WeRepackTelemetryService
+class TelemetryService implements TelemetryServiceInterface
 {
     const ENDPOINT_URL = 'https://werepack.org/api/community/v1/sites';
 
@@ -30,24 +31,28 @@ class WeRepackTelemetryService
     public function sendTelemetryData(string $url, string $language = 'en'): void
     {
         $context = Context::createDefaultContext();
-        $data = [
-            'repack_last_sent' => time(),
-            'repack_coupon' => ($this->configService->get('createPromotionCodes')) ? '1' : '0',
-            'repack_ratio' => $this->weRepackOrderRepository->getWeRepackRatio($context),
-            'repack_counter' => $this->weRepackOrderRepository->getWeRepackOrderCount($context),
-            'repack_start' => $this->weRepackOrderRepository->getWeRepackStart($context)->getTimestamp(),
-            'site_lang' => $language,
-            'site_url' => $url
-        ];
 
+        $telemetryPacket = new TelemetryPacket(
+            $this->configService->get('createPromotionCodes'),
+            $this->weRepackOrderRepository->getWeRepackRatio($context),
+            $this->weRepackOrderRepository->getWeRepackOrderCount($context),
+            $this->weRepackOrderRepository->getWeRepackStart($context)->getTimestamp(),
+            $language,
+            $url
+        );
+
+        $this->send($telemetryPacket);
+    }
+
+    public function send(TelemetryPacket $telemetryPacket): void
+    {
         try {
             $response = $this->client->request('POST', self::ENDPOINT_URL, [
-                'form_params' => $data
+                'form_params' => $telemetryPacket->toArray()
             ]);
-            $this->logger->info('Successfully transferred WeRepack telemetry data.', ['data' => $data, 'response' => $response]);
+            $this->logger->info('Successfully transferred WeRepack telemetry data.', ['data' => $telemetryPacket->toArray(), 'response' => $response]);
         } catch (GuzzleException $e) {
             $this->logger->error('Failed to send WeRepack telemetry data.', ['exception' => $e]);
         }
     }
-
 }
