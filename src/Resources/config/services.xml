@@ -45,12 +45,12 @@
         <service id="Mrpix\WeRepack\Command\TestCommand">
             <argument type="service" id="mp_repack_order.repository"/>
             <argument type="service" id="order.repository"/>
-            <argument type="service" id="Mrpix\WeRepack\Service\WeRepackTelemetryService"/>
+            <argument type="service" id="Mrpix\WeRepack\Service\TelemetryService\TelemetryService"/>
             <tag name="console.command" />
         </service>
 
         <!-- Services -->
-        <service id="Mrpix\WeRepack\Service\WeRepackTelemetryService">
+        <service id="Mrpix\WeRepack\Service\TelemetryService\TelemetryService">
             <argument type="service" id="Mrpix\WeRepack\Repository\WeRepackOrderRepository"/>
             <argument type="service" id="Mrpix\WeRepack\Service\ConfigService"/>
             <argument type="service" id="logger" />
@@ -76,7 +76,7 @@
             <argument type="service" id="promotion.repository"/>
             <argument type="service" id="Mrpix\WeRepack\Service\ConfigService"/>
             <argument type="service" id="Shopware\Core\Checkout\Promotion\Util\PromotionCodeService"/>
-            <argument type="service" id="promotion_individual_code.repository" />
+            <argument type="service" id="promotion_individual_code.repository"/>
             <argument type="service" id="Mrpix\WeRepack\Service\OrderService"/>
         </service>
 

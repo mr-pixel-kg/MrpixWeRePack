@@ -8,7 +8,7 @@ use Mrpix\WeRepack\Service\ConfigService;
 use Mrpix\WeRepack\Service\MailService;
 use Mrpix\WeRepack\Service\OrderService;
 use Mrpix\WeRepack\Service\PromotionService;
-use Mrpix\WeRepack\Service\WeRepackTelemetryService;
+use Mrpix\WeRepack\Service\TelemetryService\TelemetryServiceInterface;
 use Shopware\Core\Checkout\Cart\Event\CheckoutOrderPlacedEvent;
 use Shopware\Core\System\SalesChannel\Event\SalesChannelContextSwitchEvent;
 use Shopware\Core\System\StateMachine\Event\StateMachineStateChangeEvent;
@@ -22,10 +22,10 @@ class CheckoutConfirmSubscriber implements EventSubscriberInterface
     private PromotionService $promotionService;
     private MailService $mailService;
     private ConfigService $configService;
-    private WeRepackTelemetryService $weRepackTelemetryService;
+    private TelemetryServiceInterface $weRepackTelemetryService;
     private SalesChannelRepository $salesChannelRepository;
 
-    public function __construct(OrderService $orderService, PromotionService $promotionService, MailService $mailService, ConfigService $configService, WeRepackTelemetryService $weRepackTelemetryService, SalesChannelRepository $salesChannelRepository)
+    public function __construct(OrderService $orderService, PromotionService $promotionService, MailService $mailService, ConfigService $configService, TelemetryServiceInterface $weRepackTelemetryService, SalesChannelRepository $salesChannelRepository)
     {
         $this->session = new WeRepackSession();
         $this->orderService = $orderService;
