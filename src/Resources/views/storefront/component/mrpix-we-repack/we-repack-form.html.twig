@@ -19,13 +19,8 @@
         <form id="mrpixWeRepackForm"
             name="mrpixWeRepackForm"
             action="{{ actionPath }}"
-            data-form-csrf-handler="true"
             data-form-auto-submit="true"
             method="post">
-
-            {% block mrpix_we_repack_checkbox_form_csrf %}
-                {{ sw_csrf(action) }}
-            {% endblock %}
 
             {% block mrpix_we_repack_checkbox_form_redirect %}
                 <input type="hidden" name="redirectTo" value="{{ redirect }}">
