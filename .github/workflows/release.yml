@@ -12,7 +12,7 @@ jobs:
     with:
       plugin-name: 'MrpixWeRePack'
       plugin-version: ${GITHUB_REF#refs/tags/}
-      shopware-version: '6.5.0.0'
+      shopware-version: '6.4.20.0'
 
   build:
     name: "Release"
