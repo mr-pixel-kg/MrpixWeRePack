@@ -29,6 +29,7 @@ class WeRepackOrderRepository
         $criteria->addFilter(new EqualsFilter('isRepack', true));
         $repackOrders = $this->werepackOrderRepository->search($criteria, $context)->count();
         $totalOrders = $this->werepackOrderRepository->search(new Criteria(), $context)->count();
+        if($totalOrders === 0) return 0;
         return round($repackOrders * 100 / $totalOrders);
     }
 
