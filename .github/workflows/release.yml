@@ -10,7 +10,7 @@ jobs:
     name: "Build"
     uses: ./.github/workflows/build-plugin.yml
     with:
-      plugin-name: 'MrpixWeRePack'
+      plugin-name: 'MrpixWeRepack'
       plugin-version: ${GITHUB_REF#refs/tags/}
       shopware-version: '6.4.20.0'
 
