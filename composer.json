@@ -42,5 +42,13 @@
         "shopware/storefront": "^6.4.0",
         "guzzlehttp/guzzle": "^7.2",
         "ext-json": "*"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.0",
+        "phpstan/phpstan": "^1.10"
+    },
+    "scripts": {
+        "phpcs": "vendor/bin/php-cs-fixer fix",
+        "phpstan": "vendor/bin/phpstan analyse src"
     }
 }
