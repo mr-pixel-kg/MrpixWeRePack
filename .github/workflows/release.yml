@@ -1,4 +1,4 @@
-name: "Build & Release"
+name: Release
 
 on:
   push:
@@ -6,8 +6,17 @@ on:
       - 'v*'
 
 jobs:
+  build-pack:
+    name: "Build"
+    uses: ./.github/workflows/build-plugin.yml
+    with:
+      plugin-name: 'MrpixWeRePack'
+      plugin-version: ${GITHUB_REF#refs/tags/}
+      shopware-version: '6.4.20.0'
+
   build:
-    name: "Build & Release"
+    name: "Release"
+    needs: build-pack
     runs-on: ubuntu-latest
 
     steps:
@@ -15,15 +24,10 @@ jobs:
         id: get_version
         run: echo VERSION=${GITHUB_REF#refs/tags/} >> $GITHUB_OUTPUT
 
-      - name: "Checkout code"
-        uses: actions/checkout@v3
+      - name: "Download plugin zip"
+        uses: actions/download-artifact@v3
         with:
-          path: plugin
-
-      - name: "Build plugin zip"
-        run: |
-          chmod +x ./plugin/.github/bin/shopware-cli
-          ./plugin/.github/bin/shopware-cli extension zip ./plugin
+          name: plugin
 
       - name: "Get plugin zip file"
         id: get_zip
@@ -38,5 +42,3 @@ jobs:
         with:
           files: |
             ${{ steps.get_zip.outputs.PLUGIN_ZIP }}
-            plugin/CHANGELOG.md
-
