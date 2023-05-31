@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Removed csrf form token for Shopware 6.5
 
+## [1.0.1] - 2023-05-31
+### Fixed
+- Fixed format of WeRePack order ratio
+- Fixed typos
+
 ## [1.0.0] - 2023-03-30
 ### Added
 - Checkbox to select WeRePack packaging
