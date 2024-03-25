@@ -16,27 +16,17 @@ use Shopware\Core\System\SalesChannel\SalesChannelContext;
 
 class DiscountCalculator
 {
-    private PercentagePriceCalculator $percentagePriceCalculator;
-    private AbsolutePriceCalculator $absolutePriceCalculator;
-
-    public function __construct(PercentagePriceCalculator $percentagePriceCalculator, AbsolutePriceCalculator $absolutePriceCalculator)
+    public function __construct(private readonly PercentagePriceCalculator $percentagePriceCalculator, private readonly AbsolutePriceCalculator $absolutePriceCalculator)
     {
-        $this->percentagePriceCalculator = $percentagePriceCalculator;
-        $this->absolutePriceCalculator = $absolutePriceCalculator;
     }
 
     public function calculateDiscount(PromotionDiscountEntity $discount, LineItem $discountLineItem, LineItemCollection $products, SalesChannelContext $context)
     {
-        switch ($discount->getType()) {
-            case PromotionDiscountEntity::TYPE_ABSOLUTE:
-                $this->calculateAbsoluteDiscount($discount, $discountLineItem, $products, $context);
-                break;
-            case PromotionDiscountEntity::TYPE_PERCENTAGE:
-                $this->calculatePercentageDiscount($discount, $discountLineItem, $products, $context);
-                break;
-            default:
-                throw new DiscountCalculatorNotFoundException($discount->getType());
-        }
+        match ($discount->getType()) {
+            PromotionDiscountEntity::TYPE_ABSOLUTE => $this->calculateAbsoluteDiscount($discount, $discountLineItem, $products, $context),
+            PromotionDiscountEntity::TYPE_PERCENTAGE => $this->calculatePercentageDiscount($discount, $discountLineItem, $products, $context),
+            default => throw new DiscountCalculatorNotFoundException($discount->getType()),
+        };
     }
 
     protected function calculateAbsoluteDiscount(PromotionDiscountEntity $discount, LineItem $discountLineItem, LineItemCollection $products, SalesChannelContext $context)

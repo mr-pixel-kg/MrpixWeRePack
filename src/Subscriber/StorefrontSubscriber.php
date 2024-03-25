@@ -9,13 +9,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class StorefrontSubscriber implements EventSubscriberInterface
 {
-    private SystemConfigService $configService;
-    private PromotionService $promotionService;
-
-    public function __construct(SystemConfigService $configService, PromotionService $promotionService)
+    public function __construct(private readonly SystemConfigService $configService, private readonly PromotionService $promotionService)
     {
-        $this->configService = $configService;
-        $this->promotionService = $promotionService;
     }
 
     public static function getSubscribedEvents(): array
@@ -35,7 +30,7 @@ class StorefrontSubscriber implements EventSubscriberInterface
         }
 
         $promotion = $this->promotionService->getPromotion($event->getContext(), $salesChannelId);
-        if ($promotion === null) {
+        if (!$promotion instanceof \Shopware\Core\Checkout\Promotion\PromotionEntity) {
             return;
         }
 

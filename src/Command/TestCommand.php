@@ -13,16 +13,9 @@ class TestCommand extends Command
 {
     protected static $defaultName = 'mrpixwerepack:test';
 
-    private EntityRepository $werepackOrderRepository;
-    private EntityRepository $orderRepository;
-    private WeRepackTelemetryService $telemetryService;
-
-    public function __construct(EntityRepository $werepackOrderRepository, EntityRepository $orderRepository, WeRepackTelemetryService $telemetryService)
+    public function __construct(private readonly WeRepackTelemetryService $telemetryService)
     {
         parent::__construct(null);
-        $this->werepackOrderRepository = $werepackOrderRepository;
-        $this->orderRepository = $orderRepository;
-        $this->telemetryService = $telemetryService;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

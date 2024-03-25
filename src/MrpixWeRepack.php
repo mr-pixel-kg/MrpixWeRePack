@@ -28,7 +28,7 @@ class MrpixWeRepack extends Plugin
         $mailTemplateRepository = $this->container->get('mail_template.repository');
 
         /** @var Connection $connection */
-        $connection = $this->container->get(Connection::class);
+        $connection = $this->connection;
 
         if ($isInstall) {
             $runner = new Installer(

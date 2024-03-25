@@ -17,21 +17,14 @@ use Shopware\Core\Framework\Validation\DataBag\DataBag;
 
 class MailService
 {
-    protected AbstractMailService $mailService;
-    protected EntityRepository $mailTemplateTypeRepository;
-    protected SalesChannelRepository $salesChannelRepository;
-
-    public function __construct(AbstractMailService $mailService, EntityRepository $mailTemplateTypeRepository, SalesChannelRepository $salesChannelRepository)
+    public function __construct(protected AbstractMailService $mailService, protected EntityRepository $mailTemplateTypeRepository, protected SalesChannelRepository $salesChannelRepository)
     {
-        $this->mailService = $mailService;
-        $this->mailTemplateTypeRepository = $mailTemplateTypeRepository;
-        $this->salesChannelRepository = $salesChannelRepository;
     }
 
     public function send(OrderEntity $order, string $promotionCode, Context $context, string $salesChannelId)
     {
         $mailTemplate = $this->getMailTemplate($context);
-        if ($mailTemplate === null) {
+        if (!$mailTemplate instanceof \Shopware\Core\Content\MailTemplate\MailTemplateEntity) {
             return;
         }
         $customer = $order->getOrderCustomer();
@@ -78,7 +71,7 @@ class MailService
         $data->set('senderName', $mailTemplate->getSenderName());
         $data->set('salesChannelId', $salesChannelId);
 
-        if ($translations === null) {
+        if (!$translations instanceof \Shopware\Core\Content\MailTemplate\Aggregate\MailTemplateTranslation\MailTemplateTranslationCollection) {
             $data->set('senderName', $mailTemplate->getSenderName());
             $data->set('subject', $mailTemplate->getSubject());
             $data->set('contentPlain', $mailTemplate->getContentPlain());

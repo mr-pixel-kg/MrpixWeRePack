@@ -17,23 +17,11 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class CheckoutConfirmSubscriber implements EventSubscriberInterface
 {
-    private WeRepackSession $session;
-    private OrderService $orderService;
-    private PromotionService $promotionService;
-    private MailService $mailService;
-    private ConfigService $configService;
-    private WeRepackTelemetryService $weRepackTelemetryService;
-    private SalesChannelRepository $salesChannelRepository;
+    private readonly WeRepackSession $session;
 
-    public function __construct(OrderService $orderService, PromotionService $promotionService, MailService $mailService, ConfigService $configService, WeRepackTelemetryService $weRepackTelemetryService, SalesChannelRepository $salesChannelRepository)
+    public function __construct(private readonly OrderService $orderService, private readonly PromotionService $promotionService, private readonly MailService $mailService, private readonly ConfigService $configService, private readonly WeRepackTelemetryService $weRepackTelemetryService, private readonly SalesChannelRepository $salesChannelRepository)
     {
         $this->session = new WeRepackSession();
-        $this->orderService = $orderService;
-        $this->promotionService = $promotionService;
-        $this->mailService = $mailService;
-        $this->configService = $configService;
-        $this->weRepackTelemetryService = $weRepackTelemetryService;
-        $this->salesChannelRepository = $salesChannelRepository;
     }
 
     public static function getSubscribedEvents(): array
@@ -76,7 +64,7 @@ class CheckoutConfirmSubscriber implements EventSubscriberInterface
         }
 
         $order = $this->orderService->getOrderByTransition($event->getTransition(), $event->getContext());
-        if ($order === null) {
+        if (!$order instanceof \Shopware\Core\Checkout\Order\OrderEntity) {
             return;
         }
 
