@@ -64,7 +64,7 @@ class CheckoutConfirmSubscriber implements EventSubscriberInterface
         }
 
         $order = $this->orderService->getOrderByTransition($event->getTransition(), $event->getContext());
-        if (!$order instanceof \Shopware\Core\Checkout\Order\OrderEntity) {
+        if ($order === null) {
             return;
         }
 

@@ -14,6 +14,7 @@ use Shopware\Core\Framework\Plugin\Context\UpdateContext;
 
 class MrpixWeRepack extends Plugin
 {
+    //public $connection;
     public function install(InstallContext $installContext): void
     {
         $this->runSetup($installContext->getContext());
@@ -28,7 +29,7 @@ class MrpixWeRepack extends Plugin
         $mailTemplateRepository = $this->container->get('mail_template.repository');
 
         /** @var Connection $connection */
-        $connection = $this->connection;
+        $connection = $this->container->get(Connection::class);
 
         if ($isInstall) {
             $runner = new Installer(

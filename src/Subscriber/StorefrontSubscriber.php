@@ -30,7 +30,7 @@ class StorefrontSubscriber implements EventSubscriberInterface
         }
 
         $promotion = $this->promotionService->getPromotion($event->getContext(), $salesChannelId);
-        if (!$promotion instanceof \Shopware\Core\Checkout\Promotion\PromotionEntity) {
+        if ($promotion === null) {
             return;
         }
 

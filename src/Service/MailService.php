@@ -24,7 +24,7 @@ class MailService
     public function send(OrderEntity $order, string $promotionCode, Context $context, string $salesChannelId)
     {
         $mailTemplate = $this->getMailTemplate($context);
-        if (!$mailTemplate instanceof \Shopware\Core\Content\MailTemplate\MailTemplateEntity) {
+        if ($mailTemplate === null) {
             return;
         }
         $customer = $order->getOrderCustomer();
@@ -71,7 +71,7 @@ class MailService
         $data->set('senderName', $mailTemplate->getSenderName());
         $data->set('salesChannelId', $salesChannelId);
 
-        if (!$translations instanceof \Shopware\Core\Content\MailTemplate\Aggregate\MailTemplateTranslation\MailTemplateTranslationCollection) {
+        if ($translations === null) {
             $data->set('senderName', $mailTemplate->getSenderName());
             $data->set('subject', $mailTemplate->getSubject());
             $data->set('contentPlain', $mailTemplate->getContentPlain());
