@@ -21,17 +21,13 @@ use Shopware\Core\System\SalesChannel\SalesChannelContext;
 
 class DiscountProcessor implements CartProcessorInterface
 {
-    private WeRepackSession $session;
-    private ConfigService $configService;
-    private PromotionService $promotionService;
-    private DiscountCalculator $discountCalculator;
+    private readonly WeRepackSession $session;
+    private readonly DiscountCalculator $discountCalculator;
 
-    public function __construct(PercentagePriceCalculator $percentagePriceCalculator, AbsolutePriceCalculator $absolutePriceCalculator, ConfigService $configService, PromotionService $promotionService)
+    public function __construct(PercentagePriceCalculator $percentagePriceCalculator, AbsolutePriceCalculator $absolutePriceCalculator, private readonly ConfigService $configService, private readonly PromotionService $promotionService)
     {
         $this->discountCalculator = new DiscountCalculator($percentagePriceCalculator, $absolutePriceCalculator);
         $this->session = new WeRepackSession();
-        $this->configService = $configService;
-        $this->promotionService = $promotionService;
     }
 
     public function process(CartDataCollection $data, Cart $original, Cart $toCalculate, SalesChannelContext $context, CartBehavior $behavior): void

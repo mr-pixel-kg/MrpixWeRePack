@@ -10,7 +10,7 @@ class Installer extends Setup
     protected function adjustMails(): void
     {
         $existingMailTemplateTypeId = $this->getExistingMailTemplateTypeId(self::MAIL_TEMPLATE_TYPE_TECHNICAL_NAME);
-        $mailTemplateTypeId = $existingMailTemplateTypeId !== null ? $existingMailTemplateTypeId : $this->createMailTemplateTypeId();
+        $mailTemplateTypeId = $existingMailTemplateTypeId ?? $this->createMailTemplateTypeId();
 
         $this->createMailTemplate($mailTemplateTypeId);
     }
