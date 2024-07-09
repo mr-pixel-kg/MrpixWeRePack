@@ -1,0 +1,11 @@
+{% block sw_order_detail_details_shipping %}
+    {% parent %}
+    <sw-card
+            :title="$t('mrpixwerepack.order.title')"
+            :is-loading="order.isLoading">
+        <sw-customer-werepack
+                :order="order"
+                :is-loading="isLoading">
+        </sw-customer-werepack>
+    </sw-card>
+{% endblock %}
