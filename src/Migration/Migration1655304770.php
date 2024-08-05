@@ -2,8 +2,8 @@
 
 namespace Mrpix\WeRepack\Migration;
 
-use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception;
 use Shopware\Core\Framework\Migration\MigrationStep;
 
 class Migration1655304770 extends MigrationStep

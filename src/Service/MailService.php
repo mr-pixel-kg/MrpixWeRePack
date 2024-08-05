@@ -31,7 +31,7 @@ class MailService
     public function send(OrderEntity $order, string $promotionCode, Context $context, string $salesChannelId)
     {
         $mailTemplate = $this->getMailTemplate($context);
-        if ($mailTemplate === null) {
+        if (null === $mailTemplate) {
             return;
         }
         $customer = $order->getOrderCustomer();
@@ -39,7 +39,8 @@ class MailService
 
         $this->mailService->send(
             $data->all(),
-            $context, [
+            $context,
+            [
                 'order' => $order,
                 'salesChannel' => $this->salesChannelRepository->getSalesChannel($salesChannelId, $context),
                 'promotionCode' => $promotionCode,
@@ -56,9 +57,9 @@ class MailService
             ->addAssociation('mailTemplates.translations')
             ->addFilter(new EqualsFilter('technicalName', Setup::MAIL_TEMPLATE_TYPE_TECHNICAL_NAME));
 
-        /** @var MailTemplateTypeEntity|null $mailTemplateType */
+        /** @var null|MailTemplateTypeEntity $mailTemplateType */
         $mailTemplateType = $this->mailTemplateTypeRepository->search($criteria, $context)->first();
-        if ($mailTemplateType === null) {
+        if (null === $mailTemplateType) {
             return null;
         }
 
@@ -78,7 +79,7 @@ class MailService
         $data->set('senderName', $mailTemplate->getSenderName());
         $data->set('salesChannelId', $salesChannelId);
 
-        if ($translations === null) {
+        if (null === $translations) {
             $data->set('senderName', $mailTemplate->getSenderName());
             $data->set('subject', $mailTemplate->getSubject());
             $data->set('contentPlain', $mailTemplate->getContentPlain());

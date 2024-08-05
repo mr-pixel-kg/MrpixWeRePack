@@ -29,8 +29,7 @@ abstract class Setup
         EntityRepository $mailTemplateTypeRepository,
         EntityRepository $mailTemplateRepository,
         Connection       $connection
-    )
-    {
+    ) {
         $this->context = $context;
         $this->mailTemplateTypeRepository = $mailTemplateTypeRepository;
         $this->mailTemplateRepository = $mailTemplateRepository;

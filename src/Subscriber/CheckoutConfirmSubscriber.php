@@ -68,28 +68,28 @@ class CheckoutConfirmSubscriber implements EventSubscriberInterface
         $this->session->clear();
     }
 
-    public function onOrderStateChanged(StateMachineStateChangeEvent $event)
+    public function onOrderStateChanged(StateMachineStateChangeEvent $event): void
     {
         $name = $event->getNextState()->getTechnicalName();
-        if ($name !== 'paid') {
+        if ('paid' !== $name) {
             return;
         }
 
         $order = $this->orderService->getOrderByTransition($event->getTransition(), $event->getContext());
-        if ($order === null) {
+        if (null === $order) {
             return;
         }
 
         // if customer selected WeRepack option and WeRepack is enabled for next order, create promotion code
         $salesChannelId = $order->getSalesChannelId();
         if (!$this->configService->get('createPromotionCodes', $salesChannelId)
-            || $this->configService->get('couponSendingType', $salesChannelId) != 'order'
+            || 'order' != $this->configService->get('couponSendingType', $salesChannelId)
             || !$order->getExtension('repackOrder')->isRepack()) {
             return;
         }
 
         // event can be triggered multiple times, but only create promotion code one time
-        if ($order->getExtension('repackOrder')->getPromotionIndividualCodeId() != null) {
+        if (null != $order->getExtension('repackOrder')->getPromotionIndividualCodeId()) {
             return;
         }
 
@@ -105,10 +105,10 @@ class CheckoutConfirmSubscriber implements EventSubscriberInterface
         );
     }
 
-    public function onSalesChannelContextSwitch(SalesChannelContextSwitchEvent $event)
+    public function onSalesChannelContextSwitch(SalesChannelContextSwitchEvent $event): void
     {
         // Toggle WeRepack checkbox only if event is triggered by checkbox
-        if ($event->getRequestDataBag()->get('mrpixWeRepackToggle') == 1) {
+        if (1 == $event->getRequestDataBag()->get('mrpixWeRepackToggle')) {
             $this->session->setWeRepackEnabled(!$this->session->isWeRepackEnabled());
         }
 

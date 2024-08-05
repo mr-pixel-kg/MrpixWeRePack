@@ -45,9 +45,9 @@ class OrderService
 
     public function getOrderByTransition(Transition $transition, Context $context): ?OrderEntity
     {
-        /** @var OrderTransactionEntity|null $transaction */
+        /** @var null|OrderTransactionEntity $transaction */
         $transaction = $this->orderTransactionRepository->search(new Criteria([$transition->getEntityId()]), $context)->first();
-        if ($transaction === null) {
+        if (null === $transaction) {
             return null;
         }
         $criteria = new Criteria([$transaction->getOrderId()]);

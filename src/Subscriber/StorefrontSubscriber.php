@@ -29,13 +29,13 @@ class StorefrontSubscriber implements EventSubscriberInterface
     {
         $salesChannelId = $event->getSalesChannelContext()->getSalesChannelId();
         if (!$this->configService->get('MrpixWeRepack.config.createPromotionCodes', $salesChannelId) ||
-            $this->configService->get('MrpixWeRepack.config.couponSendingType', $salesChannelId) !== 'cart' ||
+            'cart' !== $this->configService->get('MrpixWeRepack.config.couponSendingType', $salesChannelId) ||
             !$this->configService->get('MrpixWeRepack.config.repackPromotion', $salesChannelId)) {
             return;
         }
 
         $promotion = $this->promotionService->getPromotion($event->getContext(), $salesChannelId);
-        if ($promotion === null) {
+        if (null === $promotion) {
             return;
         }
 

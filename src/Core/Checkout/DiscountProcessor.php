@@ -40,7 +40,7 @@ class DiscountProcessor implements CartProcessorInterface
 
         // if customer selected WeRepack option and WeRepack is enabled for cart, add discount
         if (!$this->configService->get('createPromotionCodes', $salesChannelId)
-            || $this->configService->get('couponSendingType', $salesChannelId) != 'cart'
+            || 'cart' != $this->configService->get('couponSendingType', $salesChannelId)
             || !$this->session->isWeRepackEnabled()) {
             return;
         }
@@ -50,7 +50,7 @@ class DiscountProcessor implements CartProcessorInterface
 
         // no products found? skip
         // no discount is assigned to the promotion? skip
-        if ($products->count() == 0 || $weRepackPromotion->getDiscounts()->count() == 0) {
+        if (0 == $products->count() || 0 == $weRepackPromotion->getDiscounts()->count()) {
             return;
         }
 
@@ -62,7 +62,7 @@ class DiscountProcessor implements CartProcessorInterface
         $discountLineItem = $this->createDiscount('WEREPACK_DISCOUNT', $weRepackPromotion);
         $discount = $weRepackPromotion->getDiscounts()->first();
 
-        if ($discount->getScope() != PromotionDiscountEntity::SCOPE_CART) {
+        if (PromotionDiscountEntity::SCOPE_CART != $discount->getScope()) {
             throw new LogicException('The discount in the WeRepack promotion can only be applied to cart!');
         }
 
@@ -75,7 +75,7 @@ class DiscountProcessor implements CartProcessorInterface
     {
         return $cart->getLineItems()->filter(function (LineItem $item) {
             // Only consider products, not custom line items or promotional line items
-            if ($item->getType() !== LineItem::PRODUCT_LINE_ITEM_TYPE) {
+            if (LineItem::PRODUCT_LINE_ITEM_TYPE !== $item->getType()) {
                 return false;
             }
 

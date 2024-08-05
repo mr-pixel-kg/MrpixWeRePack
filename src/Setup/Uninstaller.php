@@ -17,7 +17,7 @@ class Uninstaller extends Setup
             $ids[] = ['id' => $mailTemplateId];
         }
 
-        if ($ids !== []) {
+        if ([] !== $ids) {
             $this->mailTemplateRepository->delete($ids, $this->context);
         }
 
