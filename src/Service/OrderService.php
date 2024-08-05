@@ -23,7 +23,7 @@ class OrderService
         $this->weRepackOrderRepository = $weRepackOrderRepository;
     }
 
-    public function writeWeRepackOrder(OrderEntity $order, bool $isWeRepackEnabled, Context $context)
+    public function writeWeRepackOrder(OrderEntity $order, bool $isWeRepackEnabled, Context $context): void
     {
         $this->weRepackOrderRepository->upsert([
             [
@@ -34,7 +34,7 @@ class OrderService
         ], $context);
     }
 
-    public function writeIndividualPromotionCodeToWeRepackOrder(OrderEntity $order, string $promotionIndividualCodeId, Context $context)
+    public function writeIndividualPromotionCodeToWeRepackOrder(OrderEntity $order, string $promotionIndividualCodeId, Context $context): void
     {
         /** @var ?RepackOrderEntity $orderExtension */
         $orderExtension = $order->getExtension('repackOrder');

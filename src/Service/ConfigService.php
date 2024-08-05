@@ -14,7 +14,7 @@ class ConfigService
         $this->systemConfigService = $systemConfigService;
     }
 
-    public function get(string $key, ?string $salesChannelId = null)
+    public function get(string $key, ?string $salesChannelId = null): mixed
     {
         return $this->getSystemConfigService()->get(self::SYSTEM_CONFIG_DOMAIN . $key, $salesChannelId);
     }

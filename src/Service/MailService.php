@@ -28,7 +28,7 @@ class MailService
         $this->salesChannelRepository = $salesChannelRepository;
     }
 
-    public function send(OrderEntity $order, string $promotionCode, Context $context, string $salesChannelId)
+    public function send(OrderEntity $order, string $promotionCode, Context $context, string $salesChannelId): void
     {
         $mailTemplate = $this->getMailTemplate($context);
         if (null === $mailTemplate) {
