@@ -1,15 +1,13 @@
-name: "Build & Release"
+name: Build Plugin Zip
 
 on:
-  push:
-    tags:
-      - "v[0-9]+.[0-9]+.[0-9]+"
+  workflow_dispatch:
 
 env:
   PLUGIN_NAME: MrpixWeRePack
 
 jobs:
-  build:
+  run:
     name: Build and Validate Zip
     runs-on: ubuntu-latest
     steps:
@@ -36,30 +34,4 @@ jobs:
           name: ${{ env.PLUGIN_NAME }}
           path: ${{ env.PLUGIN_NAME }}.zip
           if-no-files-found: error
-          retention-days: 5
-
-  release:
-    name: "Release"
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: "Determine release version"
-        id: get_version
-        run: echo "VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
-
-      - name: "Download plugin zip"
-        uses: actions/download-artifact@v4
-        with:
-          name: ${{ env.PLUGIN_NAME }}
-          path: build
-
-      - name: "Append release version to plugin zip"
-        run: mv build/${{ env.PLUGIN_NAME }}.zip build/${{ env.PLUGIN_NAME }}-${{ env.VERSION }}.zip
-
-      - name: "Create plugin release"
-        uses: softprops/action-gh-release@v2
-        if: startsWith(github.ref, 'refs/tags/')
-        with:
-          files: |
-            build/*
+          retention-days: 90
