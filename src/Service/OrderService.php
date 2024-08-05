@@ -2,6 +2,7 @@
 
 namespace Mrpix\WeRepack\Service;
 
+use Mrpix\WeRepack\Core\Content\RepackOrder\RepackOrderEntity;
 use Shopware\Core\Checkout\Order\Aggregate\OrderTransaction\OrderTransactionEntity;
 use Shopware\Core\Checkout\Order\OrderEntity;
 use Shopware\Core\Framework\Context;
@@ -35,9 +36,12 @@ class OrderService
 
     public function writeIndividualPromotionCodeToWeRepackOrder(OrderEntity $order, string $promotionIndividualCodeId, Context $context)
     {
+        /** @var ?RepackOrderEntity $orderExtension */
+        $orderExtension = $order->getExtension('repackOrder');
+
         $this->weRepackOrderRepository->update([
             [
-                'id' => $order->getExtension('repackOrder')->getId(),
+                'id' => $orderExtension->getId(),
                 'promotionIndividualCodeId' => $promotionIndividualCodeId,
             ]
         ], $context);
@@ -53,6 +57,9 @@ class OrderService
         $criteria = new Criteria([$transaction->getOrderId()]);
         $criteria->addAssociation('repackOrder');
 
-        return $this->orderRepository->search($criteria, $context)->first();
+        /** @var ?OrderEntity $result */
+        $result = $this->orderRepository->search($criteria, $context)->first();
+
+        return $result;
     }
 }

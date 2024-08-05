@@ -10,7 +10,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class TestCommand extends Command
 {
-    protected static $defaultName = 'mrpixwerepack:test';
+    protected static string $defaultName = 'mrpixwerepack:test';
 
     public function __construct(private readonly WeRepackTelemetryService $telemetryService)
     {

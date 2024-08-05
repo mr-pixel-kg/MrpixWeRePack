@@ -40,6 +40,6 @@ class WeRepackOrderRepository
         $criteria = new Criteria();
         $criteria->addSorting(new FieldSorting('createdAt', FieldSorting::ASCENDING));
         $entityResult = $this->werepackOrderRepository->search($criteria, $context)->first();
-        return $entityResult->getCreatedAt();
+        return DateTimeImmutable::createFromInterface($entityResult->getCreatedAt());
     }
 }

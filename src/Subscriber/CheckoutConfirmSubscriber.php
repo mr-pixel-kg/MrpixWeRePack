@@ -3,6 +3,7 @@
 namespace Mrpix\WeRepack\Subscriber;
 
 use Mrpix\WeRepack\Components\WeRepackSession;
+use Mrpix\WeRepack\Core\Content\RepackOrder\RepackOrderEntity;
 use Mrpix\WeRepack\Repository\SalesChannelRepository;
 use Mrpix\WeRepack\Service\ConfigService;
 use Mrpix\WeRepack\Service\MailService;
@@ -46,14 +47,14 @@ class CheckoutConfirmSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function onCheckoutConfirmPageLoad(CheckoutConfirmPageLoadedEvent $event)
+    public function onCheckoutConfirmPageLoad(CheckoutConfirmPageLoadedEvent $event): void
     {
         $event->getPage()->addArrayExtension('MrpixWeRepack', [
             'weRepackEnabled' => $this->session->isWeRepackEnabled()
         ]);
     }
 
-    public function onCheckoutOrderPlaced(CheckoutOrderPlacedEvent $event)
+    public function onCheckoutOrderPlaced(CheckoutOrderPlacedEvent $event): void
     {
         // Write WeRepack data to database
         $this->orderService->writeWeRepackOrder($event->getOrder(), $this->session->isWeRepackEnabled(), $event->getContext());
@@ -80,16 +81,19 @@ class CheckoutConfirmSubscriber implements EventSubscriberInterface
             return;
         }
 
+        /** @var ?RepackOrderEntity $orderExtension */
+        $orderExtension = $order->getExtension('repackOrder');
+
         // if customer selected WeRepack option and WeRepack is enabled for next order, create promotion code
         $salesChannelId = $order->getSalesChannelId();
         if (!$this->configService->get('createPromotionCodes', $salesChannelId)
             || 'order' != $this->configService->get('couponSendingType', $salesChannelId)
-            || !$order->getExtension('repackOrder')->isRepack()) {
+            || !$orderExtension->isRepack()) {
             return;
         }
 
         // event can be triggered multiple times, but only create promotion code one time
-        if (null != $order->getExtension('repackOrder')->getPromotionIndividualCodeId()) {
+        if (null != $orderExtension->getPromotionIndividualCodeId()) {
             return;
         }
 

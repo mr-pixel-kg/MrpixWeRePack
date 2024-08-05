@@ -61,6 +61,9 @@ class PromotionService
         $criteria = new Criteria([$promotionId]);
         $criteria->addAssociation('discounts');
 
-        return $this->promotionRepository->search($criteria, $context)->getEntities()->first();
+        /** @var ?PromotionEntity $result */
+        $result = $this->promotionRepository->search($criteria, $context)->getEntities()->first();
+
+        return $result;
     }
 }

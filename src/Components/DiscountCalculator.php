@@ -25,7 +25,7 @@ class DiscountCalculator
         $this->absolutePriceCalculator = $absolutePriceCalculator;
     }
 
-    public function calculateDiscount(PromotionDiscountEntity $discount, LineItem $discountLineItem, LineItemCollection $products, SalesChannelContext $context)
+    public function calculateDiscount(PromotionDiscountEntity $discount, LineItem $discountLineItem, LineItemCollection $products, SalesChannelContext $context): void
     {
         match ($discount->getType()) {
             PromotionDiscountEntity::TYPE_ABSOLUTE => $this->calculateAbsoluteDiscount($discount, $discountLineItem, $products, $context),
@@ -34,7 +34,7 @@ class DiscountCalculator
         };
     }
 
-    protected function calculateAbsoluteDiscount(PromotionDiscountEntity $discount, LineItem $discountLineItem, LineItemCollection $products, SalesChannelContext $context)
+    protected function calculateAbsoluteDiscount(PromotionDiscountEntity $discount, LineItem $discountLineItem, LineItemCollection $products, SalesChannelContext $context): void
     {
         // declare price definition to define how this price is calculated
         $definition = new AbsolutePriceDefinition(
@@ -49,7 +49,7 @@ class DiscountCalculator
         );
     }
 
-    protected function calculatePercentageDiscount(PromotionDiscountEntity $discount, LineItem $discountLineItem, LineItemCollection $products, SalesChannelContext $context)
+    protected function calculatePercentageDiscount(PromotionDiscountEntity $discount, LineItem $discountLineItem, LineItemCollection $products, SalesChannelContext $context): void
     {
         // declare price definition to define how this price is calculated
         $definition = new PercentagePriceDefinition(

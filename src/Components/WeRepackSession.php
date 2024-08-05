@@ -8,7 +8,7 @@ class WeRepackSession
 {
     public const SESSION_WEREPACK_ENABLED = 'MrpixWeRepack_enabled';
 
-    private $session;
+    private Session $session;
 
     public function __construct()
     {
