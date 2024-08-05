@@ -12,8 +12,19 @@ use Shopware\Core\Framework\Uuid\Uuid;
 
 class PromotionService
 {
-    public function __construct(protected EntityRepository $promotionRepository, protected ConfigService $configService, protected PromotionCodeService $promotionCodeService, protected EntityRepository $promotionIndividualCodeRepository, protected OrderService $orderService)
+    protected EntityRepository $promotionRepository;
+    protected ConfigService $configService;
+    protected PromotionCodeService $promotionCodeService;
+    protected EntityRepository $promotionIndividualCodeRepository;
+    protected OrderService $orderService;
+
+    public function __construct(EntityRepository $promotionRepository, ConfigService $configService, PromotionCodeService $promotionCodeService, EntityRepository $promotionIndividualCodeRepository, OrderService $orderService)
     {
+        $this->promotionRepository = $promotionRepository;
+        $this->configService = $configService;
+        $this->promotionCodeService = $promotionCodeService;
+        $this->promotionIndividualCodeRepository = $promotionIndividualCodeRepository;
+        $this->orderService = $orderService;
     }
 
     public function createPromotionIndividualCode(OrderEntity $order, Context $context, string $salesChannelId): string
@@ -50,6 +61,9 @@ class PromotionService
         $criteria = new Criteria([$promotionId]);
         $criteria->addAssociation('discounts');
 
-        return $this->promotionRepository->search($criteria, $context)->getEntities()->first();
+        /** @var ?PromotionEntity $result */
+        $result = $this->promotionRepository->search($criteria, $context)->getEntities()->first();
+
+        return $result;
     }
 }

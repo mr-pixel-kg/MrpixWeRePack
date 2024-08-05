@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Mrpix\WeRepack\Subscriber;
 
@@ -9,14 +11,19 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class StorefrontSubscriber implements EventSubscriberInterface
 {
-    public function __construct(private readonly SystemConfigService $configService, private readonly PromotionService $promotionService)
+    private SystemConfigService $configService;
+    private PromotionService $promotionService;
+
+    public function __construct(SystemConfigService $configService, PromotionService $promotionService)
     {
+        $this->configService = $configService;
+        $this->promotionService = $promotionService;
     }
 
     public static function getSubscribedEvents(): array
     {
         return [
-            GenericPageLoadedEvent::class => 'onPageLoaded'
+            GenericPageLoadedEvent::class => 'onPageLoaded',
         ];
     }
 
@@ -24,13 +31,13 @@ class StorefrontSubscriber implements EventSubscriberInterface
     {
         $salesChannelId = $event->getSalesChannelContext()->getSalesChannelId();
         if (!$this->configService->get('MrpixWeRepack.config.createPromotionCodes', $salesChannelId) ||
-            $this->configService->get('MrpixWeRepack.config.couponSendingType', $salesChannelId) !== 'cart' ||
+            'cart' !== $this->configService->get('MrpixWeRepack.config.couponSendingType', $salesChannelId) ||
             !$this->configService->get('MrpixWeRepack.config.repackPromotion', $salesChannelId)) {
             return;
         }
 
         $promotion = $this->promotionService->getPromotion($event->getContext(), $salesChannelId);
-        if ($promotion === null) {
+        if (null === $promotion) {
             return;
         }
 

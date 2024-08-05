@@ -1,0 +1,82 @@
+name: Test
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+env:
+  PLUGIN_NAME: MrpixWeRePack
+  SHOPWARE_VERSION: v6.6.4.1
+  PHP_VERSION: 8.3
+
+jobs:
+  code-style-analysis:
+    name: "Code Style Analysis"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          tools: php-cs-fixer, cs2pr
+
+      - name: Run PHP CS Fixer
+        run: php-cs-fixer fix . --dry-run --format=checkstyle | cs2pr
+
+  static-code-analysis:
+    name: "Static Code Analysis"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Setup Shopware
+        uses: shopware/setup-shopware@main
+        with:
+          shopware-version: ${{ env.SHOPWARE_VERSION }}
+          php-version: ${{ env.PHP_VERSION }}
+          env: prod
+          install: 'true'
+
+      - name: Clone Extension
+        uses: actions/checkout@v4
+        with:
+          path: custom/plugins/${{ env.PLUGIN_NAME }}
+
+      - name: Install extension with Composer
+        run: composer require $(composer -d custom/plugins/${{ env.PLUGIN_NAME }} config name)
+
+      - name: Create phpstan.neon
+        working-directory: custom/plugins/${{ env.PLUGIN_NAME }}
+        run: |
+          printf "parameters:\n  tmpDir: ${{ github.workspace }}/var/phpstan\nincludes:\n  - phpstan.neon.dist" > phpstan.neon
+
+      - name: PHPStan cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}/var/phpstan
+          key: ${{ runner.OS }}-${{ github.repository }}-phpstan-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.OS }}-${{ github.repository }}-phpstan-
+
+      - name: Refresh
+        run: bin/console plugin:refresh
+
+      - name: Install Extension
+        run: bin/console plugin:install --activate ${{ env.PLUGIN_NAME }}
+
+      - name: Build PHPStan Bootstrap
+        run: php ${{ github.workspace }}/src/Core/DevOps/StaticAnalyze/phpstan-bootstrap.php
+
+      - name: Run PHPStan
+        working-directory: custom/plugins/${{ env.PLUGIN_NAME }}
+        run: ${{ github.workspace }}/vendor/bin/phpstan analyze --error-format=github --no-progress

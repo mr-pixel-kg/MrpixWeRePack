@@ -3,6 +3,7 @@
 namespace Mrpix\WeRepack\Subscriber;
 
 use Mrpix\WeRepack\Components\WeRepackSession;
+use Mrpix\WeRepack\Core\Content\RepackOrder\RepackOrderEntity;
 use Mrpix\WeRepack\Repository\SalesChannelRepository;
 use Mrpix\WeRepack\Service\ConfigService;
 use Mrpix\WeRepack\Service\MailService;
@@ -17,11 +18,23 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class CheckoutConfirmSubscriber implements EventSubscriberInterface
 {
-    private readonly WeRepackSession $session;
+    private WeRepackSession $session;
+    private OrderService $orderService;
+    private PromotionService $promotionService;
+    private MailService $mailService;
+    private ConfigService $configService;
+    private WeRepackTelemetryService $weRepackTelemetryService;
+    private SalesChannelRepository $salesChannelRepository;
 
-    public function __construct(private readonly OrderService $orderService, private readonly PromotionService $promotionService, private readonly MailService $mailService, private readonly ConfigService $configService, private readonly WeRepackTelemetryService $weRepackTelemetryService, private readonly SalesChannelRepository $salesChannelRepository)
+    public function __construct(OrderService $orderService, PromotionService $promotionService, MailService $mailService, ConfigService $configService, WeRepackTelemetryService $weRepackTelemetryService, SalesChannelRepository $salesChannelRepository)
     {
         $this->session = new WeRepackSession();
+        $this->orderService = $orderService;
+        $this->promotionService = $promotionService;
+        $this->mailService = $mailService;
+        $this->configService = $configService;
+        $this->weRepackTelemetryService = $weRepackTelemetryService;
+        $this->salesChannelRepository = $salesChannelRepository;
     }
 
     public static function getSubscribedEvents(): array
@@ -34,14 +47,14 @@ class CheckoutConfirmSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function onCheckoutConfirmPageLoad(CheckoutConfirmPageLoadedEvent $event)
+    public function onCheckoutConfirmPageLoad(CheckoutConfirmPageLoadedEvent $event): void
     {
         $event->getPage()->addArrayExtension('MrpixWeRepack', [
-            'weRepackEnabled' => $this->session->isWeRepackEnabled()
+            'weRepackEnabled' => $this->session->isWeRepackEnabled(),
         ]);
     }
 
-    public function onCheckoutOrderPlaced(CheckoutOrderPlacedEvent $event)
+    public function onCheckoutOrderPlaced(CheckoutOrderPlacedEvent $event): void
     {
         // Write WeRepack data to database
         $this->orderService->writeWeRepackOrder($event->getOrder(), $this->session->isWeRepackEnabled(), $event->getContext());
@@ -56,28 +69,31 @@ class CheckoutConfirmSubscriber implements EventSubscriberInterface
         $this->session->clear();
     }
 
-    public function onOrderStateChanged(StateMachineStateChangeEvent $event)
+    public function onOrderStateChanged(StateMachineStateChangeEvent $event): void
     {
         $name = $event->getNextState()->getTechnicalName();
-        if ($name !== 'paid') {
+        if ('paid' !== $name) {
             return;
         }
 
         $order = $this->orderService->getOrderByTransition($event->getTransition(), $event->getContext());
-        if ($order === null) {
+        if (null === $order) {
             return;
         }
+
+        /** @var ?RepackOrderEntity $orderExtension */
+        $orderExtension = $order->getExtension('repackOrder');
 
         // if customer selected WeRepack option and WeRepack is enabled for next order, create promotion code
         $salesChannelId = $order->getSalesChannelId();
         if (!$this->configService->get('createPromotionCodes', $salesChannelId)
-            || $this->configService->get('couponSendingType', $salesChannelId) != 'order'
-            || !$order->getExtension('repackOrder')->isRepack()) {
+            || 'order' != $this->configService->get('couponSendingType', $salesChannelId)
+            || !$orderExtension->isRepack()) {
             return;
         }
 
         // event can be triggered multiple times, but only create promotion code one time
-        if ($order->getExtension('repackOrder')->getPromotionIndividualCodeId() != null) {
+        if (null != $orderExtension->getPromotionIndividualCodeId()) {
             return;
         }
 
@@ -93,10 +109,10 @@ class CheckoutConfirmSubscriber implements EventSubscriberInterface
         );
     }
 
-    public function onSalesChannelContextSwitch(SalesChannelContextSwitchEvent $event)
+    public function onSalesChannelContextSwitch(SalesChannelContextSwitchEvent $event): void
     {
         // Toggle WeRepack checkbox only if event is triggered by checkbox
-        if ($event->getRequestDataBag()->get('mrpixWeRepackToggle') == 1) {
+        if (1 == $event->getRequestDataBag()->get('mrpixWeRepackToggle')) {
             $this->session->setWeRepackEnabled(!$this->session->isWeRepackEnabled());
         }
 

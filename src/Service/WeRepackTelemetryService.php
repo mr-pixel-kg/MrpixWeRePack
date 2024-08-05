@@ -13,12 +13,18 @@ class WeRepackTelemetryService
     public const ENDPOINT_URL = 'https://werepack.org/api/community/v1/sites';
 
     protected Client $client;
+    protected WeRepackOrderRepository $weRepackOrderRepository;
+    protected LoggerInterface $logger;
+    protected ConfigService $configService;
 
-    public function __construct(protected WeRepackOrderRepository $weRepackOrderRepository, protected ConfigService $configService, protected LoggerInterface $logger)
+    public function __construct(WeRepackOrderRepository $weRepackOrderRepository, ConfigService $configService, LoggerInterface $logger)
     {
         $this->client = new Client([
             'timeout' => 2.0,
         ]);
+        $this->weRepackOrderRepository = $weRepackOrderRepository;
+        $this->configService = $configService;
+        $this->logger = $logger;
     }
 
     public function sendTelemetryData(string $url, string $language = 'en'): void
@@ -31,12 +37,12 @@ class WeRepackTelemetryService
             'repack_counter' => $this->weRepackOrderRepository->getWeRepackOrderCount($context),
             'repack_start' => $this->weRepackOrderRepository->getWeRepackStart($context)->getTimestamp(),
             'site_lang' => $language,
-            'site_url' => $url
+            'site_url' => $url,
         ];
 
         try {
             $response = $this->client->request('POST', self::ENDPOINT_URL, [
-                'form_params' => $data
+                'form_params' => $data,
             ]);
             $this->logger->info('Successfully transferred WeRepack telemetry data.', ['data' => $data, 'response' => $response]);
         } catch (GuzzleException $e) {

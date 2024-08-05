@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Mrpix\WeRepack\Extension\Content\PromotionIndividualCode;
 
@@ -23,8 +25,8 @@ class PromotionIndividualCodeExtension extends EntityExtension
                 'id',
                 'promotion_individual_code_id',
                 RepackOrderDefinition::class,
-                false
-            )
+                false,
+            ),
         );
     }
 }

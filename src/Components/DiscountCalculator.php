@@ -16,11 +16,16 @@ use Shopware\Core\System\SalesChannel\SalesChannelContext;
 
 class DiscountCalculator
 {
-    public function __construct(private readonly PercentagePriceCalculator $percentagePriceCalculator, private readonly AbsolutePriceCalculator $absolutePriceCalculator)
+    private PercentagePriceCalculator $percentagePriceCalculator;
+    private AbsolutePriceCalculator $absolutePriceCalculator;
+
+    public function __construct(PercentagePriceCalculator $percentagePriceCalculator, AbsolutePriceCalculator $absolutePriceCalculator)
     {
+        $this->percentagePriceCalculator = $percentagePriceCalculator;
+        $this->absolutePriceCalculator = $absolutePriceCalculator;
     }
 
-    public function calculateDiscount(PromotionDiscountEntity $discount, LineItem $discountLineItem, LineItemCollection $products, SalesChannelContext $context)
+    public function calculateDiscount(PromotionDiscountEntity $discount, LineItem $discountLineItem, LineItemCollection $products, SalesChannelContext $context): void
     {
         match ($discount->getType()) {
             PromotionDiscountEntity::TYPE_ABSOLUTE => $this->calculateAbsoluteDiscount($discount, $discountLineItem, $products, $context),
@@ -29,33 +34,33 @@ class DiscountCalculator
         };
     }
 
-    protected function calculateAbsoluteDiscount(PromotionDiscountEntity $discount, LineItem $discountLineItem, LineItemCollection $products, SalesChannelContext $context)
+    protected function calculateAbsoluteDiscount(PromotionDiscountEntity $discount, LineItem $discountLineItem, LineItemCollection $products, SalesChannelContext $context): void
     {
         // declare price definition to define how this price is calculated
         $definition = new AbsolutePriceDefinition(
             -$discount->getValue(),
-            new LineItemRule(Rule::OPERATOR_EQ, $products->getKeys())
+            new LineItemRule(Rule::OPERATOR_EQ, $products->getKeys()),
         );
         $discountLineItem->setPriceDefinition($definition);
 
         // calculate price
         $discountLineItem->setPrice(
-            $this->absolutePriceCalculator->calculate($definition->getPrice(), $products->getPrices(), $context)
+            $this->absolutePriceCalculator->calculate($definition->getPrice(), $products->getPrices(), $context),
         );
     }
 
-    protected function calculatePercentageDiscount(PromotionDiscountEntity $discount, LineItem $discountLineItem, LineItemCollection $products, SalesChannelContext $context)
+    protected function calculatePercentageDiscount(PromotionDiscountEntity $discount, LineItem $discountLineItem, LineItemCollection $products, SalesChannelContext $context): void
     {
         // declare price definition to define how this price is calculated
         $definition = new PercentagePriceDefinition(
             -$discount->getValue(),
-            new LineItemRule(Rule::OPERATOR_EQ, $products->getKeys())
+            new LineItemRule(Rule::OPERATOR_EQ, $products->getKeys()),
         );
         $discountLineItem->setPriceDefinition($definition);
 
         // calculate price
         $discountLineItem->setPrice(
-            $this->percentagePriceCalculator->calculate($definition->getPercentage(), $products->getPrices(), $context)
+            $this->percentagePriceCalculator->calculate($definition->getPercentage(), $products->getPrices(), $context),
         );
     }
 }

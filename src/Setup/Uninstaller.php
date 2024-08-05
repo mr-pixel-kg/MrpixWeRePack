@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Mrpix\WeRepack\Setup;
 
@@ -17,7 +19,7 @@ class Uninstaller extends Setup
             $ids[] = ['id' => $mailTemplateId];
         }
 
-        if ($ids !== []) {
+        if ([] !== $ids) {
             $this->mailTemplateRepository->delete($ids, $this->context);
         }
 

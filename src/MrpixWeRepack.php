@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Mrpix\WeRepack;
 
@@ -6,7 +8,7 @@ use Doctrine\DBAL\Connection;
 use Mrpix\WeRepack\Setup\Installer;
 use Mrpix\WeRepack\Setup\Uninstaller;
 use Shopware\Core\Framework\Context;
-use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\Plugin;
 use Shopware\Core\Framework\Plugin\Context\InstallContext;
 use Shopware\Core\Framework\Plugin\Context\UninstallContext;
@@ -22,10 +24,10 @@ class MrpixWeRepack extends Plugin
 
     private function runSetup(Context $context, bool $isInstall = true): void
     {
-        /** @var EntityRepositoryInterface $mailTemplateTypeRepository */
+        /** @var EntityRepository $mailTemplateTypeRepository */
         $mailTemplateTypeRepository = $this->container->get('mail_template_type.repository');
 
-        /** @var EntityRepositoryInterface $mailTemplateRepository */
+        /** @var EntityRepository $mailTemplateRepository */
         $mailTemplateRepository = $this->container->get('mail_template.repository');
 
         /** @var Connection $connection */
@@ -36,14 +38,14 @@ class MrpixWeRepack extends Plugin
                 $context,
                 $mailTemplateTypeRepository,
                 $mailTemplateRepository,
-                $connection
+                $connection,
             );
         } else {
             $runner = new Uninstaller(
                 $context,
                 $mailTemplateTypeRepository,
                 $mailTemplateRepository,
-                $connection
+                $connection,
             );
         }
 

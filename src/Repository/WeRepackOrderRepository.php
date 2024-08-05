@@ -11,8 +11,11 @@ use Shopware\Core\Framework\DataAbstractionLayer\Search\Sorting\FieldSorting;
 
 class WeRepackOrderRepository
 {
-    public function __construct(private readonly EntityRepository $werepackOrderRepository)
+    private EntityRepository $werepackOrderRepository;
+
+    public function __construct(EntityRepository $werepackOrderRepository)
     {
+        $this->werepackOrderRepository = $werepackOrderRepository;
     }
 
     public function getWeRepackOrderCount(Context $context): int
@@ -26,7 +29,7 @@ class WeRepackOrderRepository
         $criteria->addFilter(new EqualsFilter('isRepack', true));
         $repackOrders = $this->werepackOrderRepository->search($criteria, $context)->count();
         $totalOrders = $this->werepackOrderRepository->search(new Criteria(), $context)->count();
-        if ($totalOrders === 0) {
+        if (0 === $totalOrders) {
             return 0;
         }
         return round($repackOrders * 100 / $totalOrders);
@@ -37,6 +40,6 @@ class WeRepackOrderRepository
         $criteria = new Criteria();
         $criteria->addSorting(new FieldSorting('createdAt', FieldSorting::ASCENDING));
         $entityResult = $this->werepackOrderRepository->search($criteria, $context)->first();
-        return $entityResult->getCreatedAt();
+        return DateTimeImmutable::createFromInterface($entityResult->getCreatedAt());
     }
 }

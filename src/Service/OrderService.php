@@ -2,6 +2,7 @@
 
 namespace Mrpix\WeRepack\Service;
 
+use Mrpix\WeRepack\Core\Content\RepackOrder\RepackOrderEntity;
 use Shopware\Core\Checkout\Order\Aggregate\OrderTransaction\OrderTransactionEntity;
 use Shopware\Core\Checkout\Order\OrderEntity;
 use Shopware\Core\Framework\Context;
@@ -11,41 +12,54 @@ use Shopware\Core\System\StateMachine\Transition;
 
 class OrderService
 {
-    public function __construct(protected EntityRepository $orderRepository, protected EntityRepository $orderTransactionRepository, protected EntityRepository $weRepackOrderRepository)
+    protected EntityRepository $orderRepository;
+    protected EntityRepository $orderTransactionRepository;
+    protected EntityRepository $weRepackOrderRepository;
+
+    public function __construct(EntityRepository $orderRepository, EntityRepository $orderTransactionRepository, EntityRepository $weRepackOrderRepository)
     {
+        $this->orderRepository = $orderRepository;
+        $this->orderTransactionRepository = $orderTransactionRepository;
+        $this->weRepackOrderRepository = $weRepackOrderRepository;
     }
 
-    public function writeWeRepackOrder(OrderEntity $order, bool $isWeRepackEnabled, Context $context)
+    public function writeWeRepackOrder(OrderEntity $order, bool $isWeRepackEnabled, Context $context): void
     {
         $this->weRepackOrderRepository->upsert([
             [
                 'orderId' => $order->getId(),
                 'promotionIndividualCodeId' => null,
                 'isRepack' => $isWeRepackEnabled,
-            ]
+            ],
         ], $context);
     }
 
-    public function writeIndividualPromotionCodeToWeRepackOrder(OrderEntity $order, string $promotionIndividualCodeId, Context $context)
+    public function writeIndividualPromotionCodeToWeRepackOrder(OrderEntity $order, string $promotionIndividualCodeId, Context $context): void
     {
+        /** @var ?RepackOrderEntity $orderExtension */
+        $orderExtension = $order->getExtension('repackOrder');
+
         $this->weRepackOrderRepository->update([
             [
-                'id' => $order->getExtension('repackOrder')->getId(),
+                'id' => $orderExtension->getId(),
                 'promotionIndividualCodeId' => $promotionIndividualCodeId,
-            ]
+            ],
         ], $context);
     }
 
     public function getOrderByTransition(Transition $transition, Context $context): ?OrderEntity
     {
-        /** @var OrderTransactionEntity|null $transaction */
+        /** @var null|OrderTransactionEntity $transaction */
         $transaction = $this->orderTransactionRepository->search(new Criteria([$transition->getEntityId()]), $context)->first();
-        if ($transaction === null) {
+        if (null === $transaction) {
             return null;
         }
         $criteria = new Criteria([$transaction->getOrderId()]);
         $criteria->addAssociation('repackOrder');
 
-        return $this->orderRepository->search($criteria, $context)->first();
+        /** @var ?OrderEntity $result */
+        $result = $this->orderRepository->search($criteria, $context)->first();
+
+        return $result;
     }
 }

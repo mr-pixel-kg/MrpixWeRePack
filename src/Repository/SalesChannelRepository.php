@@ -9,8 +9,11 @@ use Shopware\Core\System\SalesChannel\SalesChannelEntity;
 
 class SalesChannelRepository
 {
-    public function __construct(protected EntityRepository $salesChannelRepository)
+    protected EntityRepository $salesChannelRepository;
+
+    public function __construct(EntityRepository $salesChannelRepository)
     {
+        $this->salesChannelRepository = $salesChannelRepository;
     }
 
     public function getSalesChannel(string $salesChannelId, Context $context): ?SalesChannelEntity
@@ -20,6 +23,9 @@ class SalesChannelRepository
         $criteria->addAssociation('domains.language');
         $criteria->addAssociation('domains.language.locale');
 
-        return $this->salesChannelRepository->search($criteria, $context)->first();
+        /** @var ?SalesChannelEntity $result */
+        $result = $this->salesChannelRepository->search($criteria, $context)->first();
+
+        return $result;
     }
 }

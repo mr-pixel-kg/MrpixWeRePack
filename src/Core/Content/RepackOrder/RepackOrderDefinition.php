@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Mrpix\WeRepack\Core\Content\RepackOrder;
 
@@ -36,7 +38,7 @@ class RepackOrderDefinition extends EntityDefinition
             new FkField(
                 'promotion_individual_code_id',
                 'promotionIndividualCodeId',
-                PromotionIndividualCodeDefinition::class
+                PromotionIndividualCodeDefinition::class,
             ),
             new BoolField('is_repack', 'isRepack'),
 
@@ -45,15 +47,15 @@ class RepackOrderDefinition extends EntityDefinition
                 'order_id',
                 'id',
                 OrderDefinition::class,
-                false
+                false,
             ),
             new OneToOneAssociationField(
                 'promotionIndividualCode',
                 'promotion_individual_code_id',
                 'id',
                 PromotionIndividualCodeDefinition::class,
-                false
-            )
+                false,
+            ),
         ]);
     }
 }

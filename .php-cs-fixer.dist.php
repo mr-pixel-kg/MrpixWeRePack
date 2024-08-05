@@ -8,6 +8,8 @@ return (new PhpCsFixer\Config())
     ->setUsingCache(false)
     ->setRules([
         '@PSR2' => true,
+        '@PER-CS2.0' => true,
+        'no_unused_imports' => true,
         'array_syntax' => ['syntax' => 'short'],
         'ordered_imports' => true,
         'align_multiline_comment' => true,
