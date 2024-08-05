@@ -50,7 +50,7 @@ class CheckoutConfirmSubscriber implements EventSubscriberInterface
     public function onCheckoutConfirmPageLoad(CheckoutConfirmPageLoadedEvent $event): void
     {
         $event->getPage()->addArrayExtension('MrpixWeRepack', [
-            'weRepackEnabled' => $this->session->isWeRepackEnabled()
+            'weRepackEnabled' => $this->session->isWeRepackEnabled(),
         ]);
     }
 

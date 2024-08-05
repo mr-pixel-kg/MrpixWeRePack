@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Mrpix\WeRepack\Extension\Content\Order;
 
@@ -23,8 +25,8 @@ class OrderExtension extends EntityExtension
                 'id',
                 'order_id',
                 RepackOrderDefinition::class,
-                true
-            )
+                true,
+            ),
         );
     }
 }

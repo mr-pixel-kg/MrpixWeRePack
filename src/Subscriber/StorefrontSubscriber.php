@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Mrpix\WeRepack\Subscriber;
 
@@ -21,7 +23,7 @@ class StorefrontSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            GenericPageLoadedEvent::class => 'onPageLoaded'
+            GenericPageLoadedEvent::class => 'onPageLoaded',
         ];
     }
 

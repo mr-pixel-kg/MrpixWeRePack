@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Mrpix\WeRepack\Setup;
 
@@ -16,7 +18,7 @@ abstract class Setup
     protected const MAIL_TEMPLATE_TYPE_NAME = [
         'de-DE' => 'Gutscheinmail für WeRepack Bestellungen',
         'en-GB' => 'Coupon mail for WeRepack orders',
-        Defaults::LANGUAGE_SYSTEM => 'Coupon mail for repack orders'
+        Defaults::LANGUAGE_SYSTEM => 'Coupon mail for repack orders',
     ];
 
     protected Context $context;
@@ -28,7 +30,7 @@ abstract class Setup
         Context          $context,
         EntityRepository $mailTemplateTypeRepository,
         EntityRepository $mailTemplateRepository,
-        Connection       $connection
+        Connection       $connection,
     ) {
         $this->context = $context;
         $this->mailTemplateTypeRepository = $mailTemplateTypeRepository;

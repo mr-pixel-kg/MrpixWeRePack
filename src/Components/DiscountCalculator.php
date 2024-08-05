@@ -39,13 +39,13 @@ class DiscountCalculator
         // declare price definition to define how this price is calculated
         $definition = new AbsolutePriceDefinition(
             -$discount->getValue(),
-            new LineItemRule(Rule::OPERATOR_EQ, $products->getKeys())
+            new LineItemRule(Rule::OPERATOR_EQ, $products->getKeys()),
         );
         $discountLineItem->setPriceDefinition($definition);
 
         // calculate price
         $discountLineItem->setPrice(
-            $this->absolutePriceCalculator->calculate($definition->getPrice(), $products->getPrices(), $context)
+            $this->absolutePriceCalculator->calculate($definition->getPrice(), $products->getPrices(), $context),
         );
     }
 
@@ -54,13 +54,13 @@ class DiscountCalculator
         // declare price definition to define how this price is calculated
         $definition = new PercentagePriceDefinition(
             -$discount->getValue(),
-            new LineItemRule(Rule::OPERATOR_EQ, $products->getKeys())
+            new LineItemRule(Rule::OPERATOR_EQ, $products->getKeys()),
         );
         $discountLineItem->setPriceDefinition($definition);
 
         // calculate price
         $discountLineItem->setPrice(
-            $this->percentagePriceCalculator->calculate($definition->getPercentage(), $products->getPrices(), $context)
+            $this->percentagePriceCalculator->calculate($definition->getPercentage(), $products->getPrices(), $context),
         );
     }
 }

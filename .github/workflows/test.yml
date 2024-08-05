@@ -13,7 +13,7 @@ on:
 
 env:
   PLUGIN_NAME: MrpixWeRePack
-  SHOPWARE_VERSION: 6.6.x
+  SHOPWARE_VERSION: 6.6.0.0
   PHP_VERSION: 8.3
 
 jobs:

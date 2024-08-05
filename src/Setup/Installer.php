@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Mrpix\WeRepack\Setup;
 
@@ -24,8 +26,8 @@ class Installer extends Setup
             'technicalName' => self::MAIL_TEMPLATE_TYPE_TECHNICAL_NAME,
             'availableEntities' => [
                 'promotionIndividualCode' => 'promotionIndividualCode',
-                'salesChannel' => 'salesChannel'
-            ]
+                'salesChannel' => 'salesChannel',
+            ],
         ];
 
         $this->mailTemplateTypeRepository->create([$mailTemplateType], $this->context);
@@ -43,23 +45,23 @@ class Installer extends Setup
             'subject' => [
                 'de-DE' => 'Ihr persönlicher Gutschein für Ihre Bestellung',
                 'en-GB' => 'Your personal coupon for your order',
-                Defaults::LANGUAGE_SYSTEM => 'Your personal coupon for your order'
+                Defaults::LANGUAGE_SYSTEM => 'Your personal coupon for your order',
             ],
             'senderName' => [
                 'de-DE' => '{{ salesChannel.name }}',
                 'en-GB' => '{{ salesChannel.name }}',
-                Defaults::LANGUAGE_SYSTEM => '{{ salesChannel.name }}'
+                Defaults::LANGUAGE_SYSTEM => '{{ salesChannel.name }}',
             ],
             'contentPlain' => [
                 'de-DE' => file_get_contents($mailTemplateTypeDir . 'content_plain_de.html.twig'),
                 'en-GB' => file_get_contents($mailTemplateTypeDir . 'content_plain_en.html.twig'),
-                Defaults::LANGUAGE_SYSTEM => file_get_contents($mailTemplateTypeDir . 'content_plain_en.html.twig')
+                Defaults::LANGUAGE_SYSTEM => file_get_contents($mailTemplateTypeDir . 'content_plain_en.html.twig'),
             ],
             'contentHtml' => [
                 'de-DE' => file_get_contents($mailTemplateTypeDir . 'content_html_de.html.twig'),
                 'en-GB' => file_get_contents($mailTemplateTypeDir . 'content_html_en.html.twig'),
-                Defaults::LANGUAGE_SYSTEM => file_get_contents($mailTemplateTypeDir . 'content_html_en.html.twig')
-            ]
+                Defaults::LANGUAGE_SYSTEM => file_get_contents($mailTemplateTypeDir . 'content_html_en.html.twig'),
+            ],
         ];
 
         $this->mailTemplateRepository->create([$mailTemplate], $this->context);

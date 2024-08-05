@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Mrpix\WeRepack;
 
@@ -36,14 +38,14 @@ class MrpixWeRepack extends Plugin
                 $context,
                 $mailTemplateTypeRepository,
                 $mailTemplateRepository,
-                $connection
+                $connection,
             );
         } else {
             $runner = new Uninstaller(
                 $context,
                 $mailTemplateTypeRepository,
                 $mailTemplateRepository,
-                $connection
+                $connection,
             );
         }
 

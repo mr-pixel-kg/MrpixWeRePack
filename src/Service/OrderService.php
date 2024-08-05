@@ -30,7 +30,7 @@ class OrderService
                 'orderId' => $order->getId(),
                 'promotionIndividualCodeId' => null,
                 'isRepack' => $isWeRepackEnabled,
-            ]
+            ],
         ], $context);
     }
 
@@ -43,7 +43,7 @@ class OrderService
             [
                 'id' => $orderExtension->getId(),
                 'promotionIndividualCodeId' => $promotionIndividualCodeId,
-            ]
+            ],
         ], $context);
     }
 

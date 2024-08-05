@@ -44,8 +44,8 @@ class MailService
                 'order' => $order,
                 'salesChannel' => $this->salesChannelRepository->getSalesChannel($salesChannelId, $context),
                 'promotionCode' => $promotionCode,
-                'promotion' => $promotionCode
-            ]
+                'promotion' => $promotionCode,
+            ],
         );
     }
 
@@ -73,8 +73,8 @@ class MailService
         $data->set(
             'recipients',
             [
-                $customer->getEmail() => $customer->getFirstName() . ' ' . $customer->getLastName()
-            ]
+                $customer->getEmail() => $customer->getFirstName() . ' ' . $customer->getLastName(),
+            ],
         );
         $data->set('senderName', $mailTemplate->getSenderName());
         $data->set('salesChannelId', $salesChannelId);

@@ -37,12 +37,12 @@ class WeRepackTelemetryService
             'repack_counter' => $this->weRepackOrderRepository->getWeRepackOrderCount($context),
             'repack_start' => $this->weRepackOrderRepository->getWeRepackStart($context)->getTimestamp(),
             'site_lang' => $language,
-            'site_url' => $url
+            'site_url' => $url,
         ];
 
         try {
             $response = $this->client->request('POST', self::ENDPOINT_URL, [
-                'form_params' => $data
+                'form_params' => $data,
             ]);
             $this->logger->info('Successfully transferred WeRepack telemetry data.', ['data' => $data, 'response' => $response]);
         } catch (GuzzleException $e) {
