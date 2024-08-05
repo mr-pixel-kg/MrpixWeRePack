@@ -9,8 +9,13 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class StorefrontSubscriber implements EventSubscriberInterface
 {
-    public function __construct(private readonly SystemConfigService $configService, private readonly PromotionService $promotionService)
+    private SystemConfigService $configService;
+    private PromotionService $promotionService;
+
+    public function __construct(SystemConfigService $configService, PromotionService $promotionService)
     {
+        $this->configService = $configService;
+        $this->promotionService = $promotionService;
     }
 
     public static function getSubscribedEvents(): array

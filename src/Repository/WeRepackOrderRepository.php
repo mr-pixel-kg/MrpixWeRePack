@@ -11,8 +11,11 @@ use Shopware\Core\Framework\DataAbstractionLayer\Search\Sorting\FieldSorting;
 
 class WeRepackOrderRepository
 {
-    public function __construct(private readonly EntityRepository $werepackOrderRepository)
+    private EntityRepository $werepackOrderRepository;
+
+    public function __construct(EntityRepository $werepackOrderRepository)
     {
+        $this->werepackOrderRepository = $werepackOrderRepository;
     }
 
     public function getWeRepackOrderCount(Context $context): int

@@ -17,11 +17,23 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class CheckoutConfirmSubscriber implements EventSubscriberInterface
 {
-    private readonly WeRepackSession $session;
+    private WeRepackSession $session;
+    private OrderService $orderService;
+    private PromotionService $promotionService;
+    private MailService $mailService;
+    private ConfigService $configService;
+    private WeRepackTelemetryService $weRepackTelemetryService;
+    private SalesChannelRepository $salesChannelRepository;
 
-    public function __construct(private readonly OrderService $orderService, private readonly PromotionService $promotionService, private readonly MailService $mailService, private readonly ConfigService $configService, private readonly WeRepackTelemetryService $weRepackTelemetryService, private readonly SalesChannelRepository $salesChannelRepository)
+    public function __construct(OrderService $orderService, PromotionService $promotionService, MailService $mailService, ConfigService $configService, WeRepackTelemetryService $weRepackTelemetryService, SalesChannelRepository $salesChannelRepository)
     {
         $this->session = new WeRepackSession();
+        $this->orderService = $orderService;
+        $this->promotionService = $promotionService;
+        $this->mailService = $mailService;
+        $this->configService = $configService;
+        $this->weRepackTelemetryService = $weRepackTelemetryService;
+        $this->salesChannelRepository = $salesChannelRepository;
     }
 
     public static function getSubscribedEvents(): array

@@ -16,8 +16,13 @@ use Shopware\Core\System\SalesChannel\SalesChannelContext;
 
 class DiscountCalculator
 {
-    public function __construct(private readonly PercentagePriceCalculator $percentagePriceCalculator, private readonly AbsolutePriceCalculator $absolutePriceCalculator)
+    private PercentagePriceCalculator $percentagePriceCalculator;
+    private AbsolutePriceCalculator $absolutePriceCalculator;
+
+    public function __construct(PercentagePriceCalculator $percentagePriceCalculator, AbsolutePriceCalculator $absolutePriceCalculator)
     {
+        $this->percentagePriceCalculator = $percentagePriceCalculator;
+        $this->absolutePriceCalculator = $absolutePriceCalculator;
     }
 
     public function calculateDiscount(PromotionDiscountEntity $discount, LineItem $discountLineItem, LineItemCollection $products, SalesChannelContext $context)

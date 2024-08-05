@@ -19,8 +19,22 @@ abstract class Setup
         Defaults::LANGUAGE_SYSTEM => 'Coupon mail for repack orders'
     ];
 
-    public function __construct(protected Context          $context, protected EntityRepository $mailTemplateTypeRepository, protected EntityRepository $mailTemplateRepository, protected Connection       $connection)
+    protected Context $context;
+    protected EntityRepository $mailTemplateTypeRepository;
+    protected EntityRepository $mailTemplateRepository;
+    protected Connection $connection;
+
+    public function __construct(
+        Context          $context,
+        EntityRepository $mailTemplateTypeRepository,
+        EntityRepository $mailTemplateRepository,
+        Connection       $connection
+    )
     {
+        $this->context = $context;
+        $this->mailTemplateTypeRepository = $mailTemplateTypeRepository;
+        $this->mailTemplateRepository = $mailTemplateRepository;
+        $this->connection = $connection;
     }
 
     public function run(): void

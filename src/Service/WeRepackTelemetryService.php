@@ -13,12 +13,18 @@ class WeRepackTelemetryService
     public const ENDPOINT_URL = 'https://werepack.org/api/community/v1/sites';
 
     protected Client $client;
+    protected WeRepackOrderRepository $weRepackOrderRepository;
+    protected LoggerInterface $logger;
+    protected ConfigService $configService;
 
-    public function __construct(protected WeRepackOrderRepository $weRepackOrderRepository, protected ConfigService $configService, protected LoggerInterface $logger)
+    public function __construct(WeRepackOrderRepository $weRepackOrderRepository, ConfigService $configService, LoggerInterface $logger)
     {
         $this->client = new Client([
             'timeout' => 2.0,
         ]);
+        $this->weRepackOrderRepository = $weRepackOrderRepository;
+        $this->configService = $configService;
+        $this->logger = $logger;
     }
 
     public function sendTelemetryData(string $url, string $language = 'en'): void

@@ -7,9 +7,11 @@ use Shopware\Core\System\SystemConfig\SystemConfigService;
 class ConfigService
 {
     public const SYSTEM_CONFIG_DOMAIN = 'MrpixWeRepack.config.';
+    protected SystemConfigService $systemConfigService;
 
-    public function __construct(protected SystemConfigService $systemConfigService)
+    public function __construct(SystemConfigService $systemConfigService)
     {
+        $this->systemConfigService = $systemConfigService;
     }
 
     public function get(string $key, ?string $salesChannelId = null)

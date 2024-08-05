@@ -9,8 +9,11 @@ use Shopware\Core\System\SalesChannel\SalesChannelEntity;
 
 class SalesChannelRepository
 {
-    public function __construct(protected EntityRepository $salesChannelRepository)
+    protected EntityRepository $salesChannelRepository;
+
+    public function __construct(EntityRepository $salesChannelRepository)
     {
+        $this->salesChannelRepository = $salesChannelRepository;
     }
 
     public function getSalesChannel(string $salesChannelId, Context $context): ?SalesChannelEntity

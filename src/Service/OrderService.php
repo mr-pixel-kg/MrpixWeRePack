@@ -11,8 +11,15 @@ use Shopware\Core\System\StateMachine\Transition;
 
 class OrderService
 {
-    public function __construct(protected EntityRepository $orderRepository, protected EntityRepository $orderTransactionRepository, protected EntityRepository $weRepackOrderRepository)
+    protected EntityRepository $orderRepository;
+    protected EntityRepository $orderTransactionRepository;
+    protected EntityRepository $weRepackOrderRepository;
+
+    public function __construct(EntityRepository $orderRepository, EntityRepository $orderTransactionRepository, EntityRepository $weRepackOrderRepository)
     {
+        $this->orderRepository = $orderRepository;
+        $this->orderTransactionRepository = $orderTransactionRepository;
+        $this->weRepackOrderRepository = $weRepackOrderRepository;
     }
 
     public function writeWeRepackOrder(OrderEntity $order, bool $isWeRepackEnabled, Context $context)

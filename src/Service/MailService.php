@@ -17,8 +17,15 @@ use Shopware\Core\Framework\Validation\DataBag\DataBag;
 
 class MailService
 {
-    public function __construct(protected AbstractMailService $mailService, protected EntityRepository $mailTemplateTypeRepository, protected SalesChannelRepository $salesChannelRepository)
+    protected AbstractMailService $mailService;
+    protected EntityRepository $mailTemplateTypeRepository;
+    protected SalesChannelRepository $salesChannelRepository;
+
+    public function __construct(AbstractMailService $mailService, EntityRepository $mailTemplateTypeRepository, SalesChannelRepository $salesChannelRepository)
     {
+        $this->mailService = $mailService;
+        $this->mailTemplateTypeRepository = $mailTemplateTypeRepository;
+        $this->salesChannelRepository = $salesChannelRepository;
     }
 
     public function send(OrderEntity $order, string $promotionCode, Context $context, string $salesChannelId)
