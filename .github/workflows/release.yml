@@ -25,7 +25,7 @@ jobs:
         run: shopware-cli extension zip ${{ env.PLUGIN_NAME }} --git-commit "${{ github.sha }}"
 
       - name: Rename
-        run: mv WeRepack-${{ github.sha }}.zip ${{ env.PLUGIN_NAME }}.zip
+        run: mv MrpixWeRepack-${{ github.sha }}.zip ${{ env.PLUGIN_NAME }}.zip
 
       - name: Validate
         run: shopware-cli extension validate ${{ env.PLUGIN_NAME }}.zip
