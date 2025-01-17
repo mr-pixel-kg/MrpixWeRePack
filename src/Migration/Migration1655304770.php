@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `mp_repack_order` (
         REFERENCES `order` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT `fk.mp_repack_order.promotion_individual_code_id` FOREIGN KEY(`promotion_individual_code_id`)
         REFERENCES `promotion_individual_code` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 SQL;
 
         $connection->executeStatement($query);
