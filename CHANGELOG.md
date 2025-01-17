@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.1.4] - Unreleased
 ### Fixed
 - Fixed disappearing WeRePack information in database after order view
+- WeRePack Checkbox CSS Style
 
 ## [1.1.3] - 2024-08-05
 ### Fixed
