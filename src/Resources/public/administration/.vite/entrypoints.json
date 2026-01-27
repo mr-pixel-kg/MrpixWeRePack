@@ -1,0 +1,25 @@
+{
+  "base": "/bundles/mrpixwerepack/administration/",
+  "entryPoints": {
+    "mrpix-we-repack": {
+      "css": [
+        "/bundles/mrpixwerepack/administration/assets/mrpix-we-repack-DnLDTVOG.css"
+      ],
+      "dynamic": [],
+      "js": [
+        "/bundles/mrpixwerepack/administration/assets/mrpix-we-repack-B5bUa1Gz.js"
+      ],
+      "legacy": false,
+      "preload": []
+    }
+  },
+  "legacy": false,
+  "metadatas": {},
+  "version": [
+    "7.1.0",
+    7,
+    1,
+    0
+  ],
+  "viteServer": null
+}
