@@ -12,7 +12,6 @@ use Shopware\Core\Checkout\Cart\Rule\LineItemRule;
 use Shopware\Core\Checkout\Promotion\Aggregate\PromotionDiscount\PromotionDiscountEntity;
 use Shopware\Core\Framework\Rule\Rule;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
-use Shopware\Core\Checkout\Promotion\PromotionException;
 
 
 class DiscountCalculator
@@ -31,7 +30,7 @@ class DiscountCalculator
         match ($discount->getType()) {
             PromotionDiscountEntity::TYPE_ABSOLUTE => $this->calculateAbsoluteDiscount($discount, $discountLineItem, $products, $context),
             PromotionDiscountEntity::TYPE_PERCENTAGE => $this->calculatePercentageDiscount($discount, $discountLineItem, $products, $context),
-            default => throw PromotionException::discountCalculatorNotFound($discount->getType()),
+            default => throw new \LogicException(sprintf('Discount type "%s" is not supported', $discount->getType())),
         };
     }
 
