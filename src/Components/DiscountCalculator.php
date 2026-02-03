@@ -13,7 +13,6 @@ use Shopware\Core\Checkout\Promotion\Aggregate\PromotionDiscount\PromotionDiscou
 use Shopware\Core\Framework\Rule\Rule;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
 
-
 class DiscountCalculator
 {
     private PercentagePriceCalculator $percentagePriceCalculator;
