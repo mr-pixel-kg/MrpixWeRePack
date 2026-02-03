@@ -54,7 +54,7 @@ class PromotionService
     public function getPromotion(Context $context, string $salesChannelId): ?PromotionEntity
     {
         $promotionId = $this->configService->get('repackPromotion', $salesChannelId);
-        if (empty($promotionId)) {
+        if (!\is_string($promotionId) || $promotionId === '') {
             return null;
         }
 

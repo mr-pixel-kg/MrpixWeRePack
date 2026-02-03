@@ -86,14 +86,14 @@ class CheckoutConfirmSubscriber implements EventSubscriberInterface
 
         // if customer selected WeRepack option and WeRepack is enabled for next order, create promotion code
         $salesChannelId = $order->getSalesChannelId();
-        if (!$this->configService->get('createPromotionCodes', $salesChannelId)
-            || 'order' != $this->configService->get('couponSendingType', $salesChannelId)
-            || !$orderExtension->isRepack()) {
+        if ($this->configService->get('createPromotionCodes', $salesChannelId) !== true
+            || $this->configService->get('couponSendingType', $salesChannelId) !== 'order'
+            || $orderExtension->isRepack() !== true) {
             return;
         }
 
         // event can be triggered multiple times, but only create promotion code one time
-        if (null != $orderExtension->getPromotionIndividualCodeId()) {
+        if ($orderExtension->getPromotionIndividualCodeId() !== null) {
             return;
         }
 
@@ -112,7 +112,7 @@ class CheckoutConfirmSubscriber implements EventSubscriberInterface
     public function onSalesChannelContextSwitch(SalesChannelContextSwitchEvent $event): void
     {
         // Toggle WeRepack checkbox only if event is triggered by checkbox
-        if (1 == $event->getRequestDataBag()->get('mrpixWeRepackToggle')) {
+        if ((int) $event->getRequestDataBag()->get('mrpixWeRepackToggle') === 1) {
             $this->session->setWeRepackEnabled(!$this->session->isWeRepackEnabled());
         }
 
