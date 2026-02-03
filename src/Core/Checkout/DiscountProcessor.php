@@ -39,9 +39,9 @@ class DiscountProcessor implements CartProcessorInterface
         $salesChannelId = $context->getSalesChannelId();
 
         // if customer selected WeRepack option and WeRepack is enabled for cart, add discount
-        if ($this->configService->get('createPromotionCodes', $salesChannelId) !== true
-            || $this->configService->get('couponSendingType', $salesChannelId) !== 'cart'
-            || $this->session->isWeRepackEnabled() !== true) {
+        if (true !== $this->configService->get('createPromotionCodes', $salesChannelId)
+            || 'cart' !== $this->configService->get('couponSendingType', $salesChannelId)
+            || true !== $this->session->isWeRepackEnabled()) {
             return;
         }
 
@@ -50,7 +50,7 @@ class DiscountProcessor implements CartProcessorInterface
 
         // no products found? skip
         // no discount is assigned to the promotion? skip
-        if ($weRepackPromotion === null || $products->count() === 0 || $weRepackPromotion->getDiscounts()->count() === 0) {
+        if (null === $weRepackPromotion || 0 === $products->count() || 0 === $weRepackPromotion->getDiscounts()->count()) {
             return;
         }
 
@@ -62,7 +62,7 @@ class DiscountProcessor implements CartProcessorInterface
         $discountLineItem = $this->createDiscount('WEREPACK_DISCOUNT', $weRepackPromotion);
         $discount = $weRepackPromotion->getDiscounts()->first();
 
-        if ($discount === null || $discount->getScope() !== PromotionDiscountEntity::SCOPE_CART) {
+        if (null === $discount || PromotionDiscountEntity::SCOPE_CART !== $discount->getScope()) {
             throw new LogicException('The discount in the WeRepack promotion can only be applied to cart!');
         }
 
