@@ -19,8 +19,8 @@ on:
 
 env:
   PLUGIN_NAME: MrpixWeRePack
-  SHOPWARE_VERSION: v6.6.4.1
-  PHP_VERSION: 8.3
+  SHOPWARE_VERSION: trunk
+  PHP_VERSION: 8.4
 
 jobs:
   code-style-analysis:

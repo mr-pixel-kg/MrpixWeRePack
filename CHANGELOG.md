@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.4] - 2026-02-03
+### Fixed
+- Fixed disappearing WeRePack information in database after order view
+- WeRePack Checkbox CSS Style
+- Minor code style adjustements for compatibility with newer versions
+### Changed
+- Shopware 6.7 compatibility
+
 ## [1.1.3] - 2024-08-05
 ### Fixed
 - Fixed dependency injection for test command

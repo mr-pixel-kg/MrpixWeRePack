@@ -17,6 +17,11 @@ class PromotionIndividualCodeExtension extends EntityExtension
         return PromotionIndividualCodeDefinition::class;
     }
 
+    public function getEntityName(): string
+    {
+        return PromotionIndividualCodeDefinition::ENTITY_NAME;
+    }
+
     public function extendFields(FieldCollection $collection): void
     {
         $collection->add(

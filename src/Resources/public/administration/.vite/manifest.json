@@ -1,0 +1,11 @@
+{
+  "main.js": {
+    "file": "assets/mrpix-we-repack-D5TgUR-k.js",
+    "name": "mrpix-we-repack",
+    "src": "main.js",
+    "isEntry": true,
+    "css": [
+      "assets/mrpix-we-repack-DnLDTVOG.css"
+    ]
+  }
+}
