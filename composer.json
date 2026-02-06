@@ -37,8 +37,8 @@
         }
     },
     "require": {
-        "shopware/core": "^6.6.0",
-        "shopware/storefront": "^6.6.0",
+        "shopware/core": "~6.7.0",
+        "shopware/storefront": "~6.7.0",
         "guzzlehttp/guzzle": "^7.2",
         "ext-json": "*"
     },
